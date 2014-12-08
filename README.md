@@ -8,10 +8,6 @@ Try it: http://write-a-game.herokuapp.com/
 
 ## Next up
 
-- Can write simple 2D chasing game without obstacles. Player chases prey.
-
-Tasks
-
 - Save/load code, write examples (can rip from turtle roy)
 - Write simple game
 - Walls / maze for pacman type games
