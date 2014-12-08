@@ -2,15 +2,27 @@
 
 Write games with Javascript code in the browser
 
-Goal
+## Goal I
+
+- Can write simple 2D chasing game without obstacles. Player chases prey.
+
+Tasks
+
+- Collision detection
+- Image support (fixed set of images)
+- Show score text
+
+## Goal II
+
+- Can write game that has start screen, gameplay and gameover
+
+## Goal III
 
 - Should be able to write pacman
 
-Next steps
+Task
 
-- Image support (fixed set of images)
 - Uploadable images (server encodes as Base64, sends back to client)
-- Collision detection
 - Walls / maze
 - Save code (can rip from turtle roy)
 
