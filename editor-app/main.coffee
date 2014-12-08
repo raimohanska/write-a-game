@@ -36,6 +36,7 @@ evalCode = (code) ->
   window.frameLoaded = (frame) ->
     try
       frame.eval(code)
+      errorDisplay.clearError()
     catch e
       errorDisplay.showError(parseStack(e))
   $("#game").attr("src", "game.html")
