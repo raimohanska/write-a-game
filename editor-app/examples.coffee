@@ -1,5 +1,8 @@
 module.exports =
-  first: """
+  first:
+    name: "first example"
+    assets: {}
+    code: """
 var mila = new Figure("mila")
 var ella = new Figure("ella")
 
