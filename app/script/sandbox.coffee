@@ -1,3 +1,4 @@
+_ = require("lodash")
 Sandbox = ->
   iframe = document.createElement("iframe")
   iframe.style.display = "none"
@@ -7,7 +8,6 @@ Sandbox = ->
     frame.eval code
 
   setGlobals: (env) ->
-    _.forEach env, (value, key) ->
-      frame[key] = value
+    _.extend(frame, env)
 
 module.exports = Sandbox

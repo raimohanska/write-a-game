@@ -4,22 +4,41 @@ _ = require("lodash")
 $.fn.asEventStream = Bacon.$.asEventStream
 sandbox = require("./sandbox.coffee")()
 
-$code = $("#code")
-$header = $("#assignment .heading")
-$run = $("#assignment .run")
+$code = $("#code #editor")
+$run = $(".run")
 
-codeMirror = CodeMirror.fromTextArea $code.get(0), { 
+runBus = new Bacon.Bus()
+
+codeMirror = CodeMirror.fromTextArea $code.get(0), {
   lineNumbers: true
   mode: "javascript"
-  theme: "solarized dark"
+  theme: "solarized dark",
+  extraKeys: {
+    "Ctrl-Enter": -> runBus.push()
+  }
 }
+codeMirror.setValue(localStorage.code)
 codeP = Bacon.fromEventTarget(codeMirror, "change")
   .map(".getValue")
-  .toProperty(code)
+  .toProperty(localStorage.code)
 enabledP = Bacon.constant(true)
 
-evalE = codeP.filter(enabledP).sampledBy($run.asEventStream("click").doAction(".preventDefault"))
+codeP.onValue (code) -> 
+  localStorage.code = code
 
-evalCode = (code) -> sandbox.eval("(" + code + ")")
+evalE = codeP.filter(enabledP).sampledBy($run.asEventStream("click").doAction(".preventDefault").merge(runBus))
 
+interval = (i, fn) -> setInterval(fn, i)
+
+Figure = require("./figure.coffee")
+
+globals = { Figure, $, interval }
+
+evalCode = (code) -> 
+  $("#game").children().remove()
+  sandbox.eval(code)
 evalE.onValue(evalCode)
+
+_.extend(window, globals)
+sandbox.setGlobals(globals)
+codeMirror.focus()
