@@ -32,6 +32,7 @@ evalE = codeP.filter(enabledP).sampledBy($run.asEventStream("click").doAction(".
 $error = $("#code .error")
 parseStack = require("./parse-stack.coffee")
 errorDisplay = require("./error-display.coffee")(codeMirror, $error)
+
 evalCode = (code) -> 
   window.frameLoaded = (frame) ->
     try
@@ -39,7 +40,7 @@ evalCode = (code) ->
       errorDisplay.clearError()
     catch e
       errorDisplay.showError(parseStack(e))
-  $("#game").attr("src", "game.html")
+  $("#game").attr("src", "game/game.html")
 
 evalE.onValue(evalCode)
 
