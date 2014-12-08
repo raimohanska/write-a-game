@@ -6,31 +6,19 @@ Under construction!
 
 Try it: http://write-a-game.herokuapp.com/
 
-## Goal I
+## Next up
 
 - Can write simple 2D chasing game without obstacles. Player chases prey.
 
 Tasks
 
-- Collision detection
-- Image support (fixed set of images)
-- Show score text
-- Support saving to mongo
-- Ability to select from a bunch of examples
+- Save/load code, write examples (can rip from turtle roy)
+- Write simple game
+- Walls / maze for pacman type games
 
-## Goal II
+## Goal
 
-- Can write game that has start screen, gameplay and gameover
-
-## Goal III
-
-- Should be able to write pacman
-
-Task
-
-- Uploadable images (server encodes as Base64, sends back to client)
-- Walls / maze
-- Save code (can rip from turtle roy)
+Should be able to write pacman!
 
 ## build & run
 
