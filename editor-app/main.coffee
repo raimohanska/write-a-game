@@ -29,9 +29,15 @@ codeP.onValue (code) ->
 
 evalE = codeP.filter(enabledP).sampledBy($run.asEventStream("click").doAction(".preventDefault").merge(runBus))
 
+$error = $("#code .error")
+parseStack = require("./parse-stack.coffee")
+errorDisplay = require("./error-display.coffee")(codeMirror, $error)
 evalCode = (code) -> 
   window.frameLoaded = (frame) ->
-    frame.eval(code)
+    try
+      frame.eval(code)
+    catch e
+      errorDisplay.showError(parseStack(e))
   $("#game").attr("src", "game.html")
 
 evalE.onValue(evalCode)
