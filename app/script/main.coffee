@@ -30,7 +30,7 @@ codeP.onValue (code) ->
 
 evalE = codeP.filter(enabledP).sampledBy($run.asEventStream("click").doAction(".preventDefault").merge(runBus))
 
-interval = (i, fn) -> setInterval(fn, i)
+interval = (i, fn) -> Bacon.interval(i).takeUntil(evalE).onValue(fn)
 
 Figure = require("./figure.coffee")
 
