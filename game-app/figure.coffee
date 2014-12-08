@@ -6,7 +6,6 @@ class Figure
       @elem = $("<img>")
         .addClass("figure")
         .attr("src", assets[desc].data)
-      @elem.css { width: "30px", height: "30px" }
     else
       @elem = $("<div>").addClass("figure")
       text = desc || ("" + (counter++))
