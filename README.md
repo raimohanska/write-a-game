@@ -8,7 +8,6 @@ Goal
 
 Next steps
 
-- Run fully in iframe
 - Image support (fixed set of images)
 - Uploadable images (server encodes as Base64, sends back to client)
 - Collision detection

@@ -2,7 +2,6 @@ $ = window.$ = require("jquery")
 Bacon = window.Bacon = require("baconjs")
 _ = require("lodash")
 $.fn.asEventStream = Bacon.$.asEventStream
-sandbox = require("./sandbox.coffee")()
 examples = require("./examples.coffee")
 
 $code = $("#code #editor")
@@ -30,18 +29,12 @@ codeP.onValue (code) ->
 
 evalE = codeP.filter(enabledP).sampledBy($run.asEventStream("click").doAction(".preventDefault").merge(runBus))
 
-interval = (i, fn) -> Bacon.interval(i).takeUntil(evalE).onValue(fn)
-
-Figure = require("./figure.coffee")
-
-globals = { Figure, $, _, interval }
-
 evalCode = (code) -> 
-  $("#game").children().remove()
-  sandbox.eval(code)
+  window.frameLoaded = (frame) ->
+    frame.eval(code)
+  $("#game").attr("src", "game.html")
+
 evalE.onValue(evalCode)
 
-_.extend(window, globals)
-sandbox.setGlobals(globals)
 codeMirror.focus()
 $("body").css("opacity", 1)

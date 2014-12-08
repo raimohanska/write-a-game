@@ -3,20 +3,21 @@ module.exports = (grunt) ->
 
   grunt.initConfig {
     browserify: {
-      bundle: {
-        files: {
-          'output/bundle.js': ['app/script/*.coffee']
-        },
-        options: {
-          transform: ['coffeeify']
-        }
+      main: {
+        files: { 'output/bundle.js': ['app/script/main.coffee'] },
+        options: { transform: ['coffeeify'] }
+      }
+      game: {
+        files: { 'output/game.js': ['app/script/game.coffee'] },
+        options: { transform: ['coffeeify'] }
       }
     },
     less: {
-      all: {
-        files: {
-          'output/main.css': ['app/less/main.less']
-        }
+      main: {
+        files: { 'output/main.css': ['app/less/main.less'] }
+      }
+      game: {
+        files: { 'output/game.css': ['app/less/game.less'] }
       }
     }
     copy: {
