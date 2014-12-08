@@ -13,7 +13,6 @@ Next steps
 - Collision detection
 - Walls / maze
 - Save code (can rip from turtle roy)
-- Error handling/view (check turtle-js)
 
 ## build & run
 
