@@ -46,6 +46,16 @@ assetsP = Bacon.update initialApplication.assets,
     assets[newFile.name] = newFile
     assets
 
+assetsP.onValue (assets) ->
+  elems = _.keys(assets).map (name) ->
+    asset = assets[name]
+    preview = $("<img>").attr("src", asset.data)
+    return $("<li>")
+      .append($("<span>").addClass("name").text(asset.name))
+      .append(preview)
+  $("#assets ul").html(elems)
+
+
 applicationP = Bacon.combineTemplate
   name: "some app"
   code: codeP
