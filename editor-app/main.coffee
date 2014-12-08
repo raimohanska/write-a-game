@@ -31,7 +31,10 @@ evalE = codeP.filter(enabledP).sampledBy($run.asEventStream("click").doAction(".
 
 evalCode = (code) -> 
   window.frameLoaded = (frame) ->
-    frame.eval(code)
+    scriptElem = frame.document.createElement "script"
+    scriptElem.type = "text/javascript"
+    scriptElem.text = code
+    frame.document.body.appendChild scriptElem
   $("#game").attr("src", "game.html")
 
 evalE.onValue(evalCode)
