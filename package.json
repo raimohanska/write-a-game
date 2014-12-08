@@ -9,11 +9,12 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "baconjs": "0.7.8",
+    "baconjs": "^0.7.37",
     "browserify": "~3",
     "coffeeify": "~0.6",
     "jquery": "~2",
     "lodash": "2.4.1",
+    "codemirror": "~4.7",
     "grunt": "~0.4.4",
     "grunt-cli": "~0.1.13",
     "grunt-contrib-jshint": "~0.6.3",

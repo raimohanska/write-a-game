@@ -6,4 +6,5 @@ what's up?
 
     npm install
     grunt
-    open public/index.html
+    ./server
+    open http://localhost:3000

@@ -1,26 +1,18 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="game.css">
+    <link rel="stylesheet" type="text/css" href="main.css">
+    <link rel="stylesheet" type="text/css" href="codemirror/lib/codemirror.css">
+    <link rel="stylesheet" type="text/css" href="codemirror/theme/solarized.css">
+    <link href='http://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
   </head>
   <body>
     <h1>Write a Game!</h1>
-    <div id="info">by @raimohanska 
-      - more info on 
-      <a href="https://github.com/raimohanska/write-a-game">Github</a>
-    </div>
     <div id="assignment">
-      <div class="heading">
-        <h2>Assignment <span class="number"></span>:</h2>
-        <div class="description"></div>
-      </div>
-      <textarea class="code"></textarea>
+      <textarea id="code"></textarea>
       <button class="run">RUN</button>
-      <span class="result"></span>
-      <div class="navi">
-        <a class="previous">&lt;&lt; previous</a>
-        <a class="next">next &gt;&gt;</a>
-      </div>
   </body>
+  <script src="codemirror/lib/codemirror.js"></script>
+  <script src="codemirror/mode/javascript/javascript.js"></script>
   <script src="bundle.js"></script>
 </html>
