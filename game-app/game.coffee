@@ -4,8 +4,9 @@ _ = require("lodash")
 Figure = require("./figure.coffee")
 
 interval = (i, fn) -> setInterval fn, i
+background = (bg) -> $("#game").css("background", bg)
 
-globals = { Figure, $, _, interval }
+globals = { Figure, $, _, interval, background }
 
 _.extend(window, globals)
 
