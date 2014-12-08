@@ -3,6 +3,7 @@ Bacon = window.Bacon = require("baconjs")
 _ = require("lodash")
 $.fn.asEventStream = Bacon.$.asEventStream
 sandbox = require("./sandbox.coffee")()
+examples = require("./examples.coffee")
 
 $code = $("#code #editor")
 $run = $(".run")
@@ -17,10 +18,11 @@ codeMirror = CodeMirror.fromTextArea $code.get(0), {
     "Ctrl-Enter": -> runBus.push()
   }
 }
-codeMirror.setValue(localStorage.code)
+initialCode = localStorage.code || examples.first
+codeMirror.setValue(initialCode)
 codeP = Bacon.fromEventTarget(codeMirror, "change")
   .map(".getValue")
-  .toProperty(localStorage.code)
+  .toProperty(initialCode)
 enabledP = Bacon.constant(true)
 
 codeP.onValue (code) -> 
