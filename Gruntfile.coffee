@@ -4,41 +4,38 @@ module.exports = (grunt) ->
   grunt.initConfig {
     browserify: {
       main: {
-        files: { 'output/bundle.js': ['app/script/main.coffee'] },
+        files: { 'output/editor.js': ['editor-app/main.coffee'] },
         options: { transform: ['coffeeify'] }
       }
       game: {
-        files: { 'output/game.js': ['app/script/game.coffee'] },
+        files: { 'output/game/game.js': ['game-app/game.coffee'] },
         options: { transform: ['coffeeify'] }
       }
     },
     less: {
       main: {
-        files: { 'output/main.css': ['app/less/main.less'] }
+        files: { 'output/main.css': ['editor-app/main.less'] }
       }
       game: {
-        files: { 'output/game.css': ['app/less/game.less'] }
+        files: { 'output/game/game.css': ['game-app/game.less'] }
       }
     }
     copy: {
-      html: {
+      main: {
         files: [
-          {expand: true, cwd: 'app/', src: '**/*.html', dest: 'output/'}
+          {expand: true, cwd: 'editor-app/', src: '**/*.html', dest: 'output/'}
+        ]
+      }
+      game: {
+        files: [
+          {expand: true, cwd: 'game-app/', src: '**/*.html', dest: 'output/game/'}
         ]
       }
     }
     watch: {
       scripts: {
-        files: ['app/script/**'],
-        tasks: 'browserify'
-      },
-      less: {
-        files: ['app/less/**'],
-        tasks: 'less'
-      },
-      html: {
-        files: ['app/**/*.html'],
-        tasks: 'copy'
+        files: ['game-app/**'],
+        tasks: ['browserify:game', 'less:game', 'copy']
       }
     }
   }
