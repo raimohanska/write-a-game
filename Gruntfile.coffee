@@ -33,9 +33,13 @@ module.exports = (grunt) ->
       }
     }
     watch: {
-      scripts: {
+      main: {
+        files: ['editor-app/**'],
+        tasks: ['browserify:main', 'less:main', 'copy:main']
+      }
+      game: {
         files: ['game-app/**'],
-        tasks: ['browserify:game', 'less:game', 'copy']
+        tasks: ['browserify:game', 'less:game', 'copy:game']
       }
     }
   }
