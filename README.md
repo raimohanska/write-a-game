@@ -11,6 +11,8 @@ Tasks
 - Collision detection
 - Image support (fixed set of images)
 - Show score text
+- Support saving to mongo
+- Ability to select from a bunch of examples
 
 ## Goal II
 
