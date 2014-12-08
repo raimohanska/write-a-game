@@ -1,6 +1,10 @@
 ## write-a-game
 
-Write games with Javascript code in the browser
+Write games with Javascript code in the browser.
+
+Under construction!
+
+Try it: http://write-a-game.herokuapp.com/
 
 ## Goal I
 
