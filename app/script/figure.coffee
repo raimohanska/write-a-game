@@ -7,9 +7,11 @@ class Figure
     text = name || ("" + (counter++))
     @elem.text(text)
     @elem.css { background: "#cccccc", "border": "1px solid black", width: "30px", height: "30px" }
-  setPos: (@pos) ->
+  setPos: (pos) ->
+    @pos = _.clone(pos)
     @elem.css { left: @pos.x, top: @pos.y }
     this
+  getPos: -> @pos
   move: (@diff) ->
     newPos = { x: @pos.x + @diff.x, y: @pos.y + @diff.y }
     @setPos newPos

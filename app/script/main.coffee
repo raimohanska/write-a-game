@@ -34,7 +34,7 @@ interval = (i, fn) -> Bacon.interval(i).takeUntil(evalE).onValue(fn)
 
 Figure = require("./figure.coffee")
 
-globals = { Figure, $, interval }
+globals = { Figure, $, _, interval }
 
 evalCode = (code) -> 
   $("#game").children().remove()
