@@ -1,4 +1,4 @@
-module.exports = (applicationP, saveE, saveCopyE, renameE) ->
+module.exports = (applicationP, saveE, renameE) ->
   saveResultE = saveE
     .map applicationP
     .map (application) -> {

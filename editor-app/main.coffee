@@ -76,11 +76,22 @@ applicationP.onValue (application) ->
 storage = Storage(
   applicationP,
   menubar.itemClickE("file-save")
-  menubar.itemClickE("file-save-copy")
   renameBus
 )
 storage.saveResultE.log() # TODO: replace with a feedback
 storage.renameResultE.log() # TODO: replace with a feedback
+
+promptNewName = (application) ->
+  newName = prompt("Enter new name", application.name + " fork")
+  application = _.clone(application)
+  application.name = newName
+  application
+
+forkE = menubar.itemClickE("file-fork")
+  .map(applicationP)
+  .flatMap (application) -> promptNewName(application)
+
+fileLoadedBus.plug(forkE)
 
 author.loggedInP.onValue (loggedIn) ->
   $(".menu .loggedin").toggleClass("disabled", !loggedIn)
