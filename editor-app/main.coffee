@@ -18,6 +18,7 @@ menubar = require("./menu.coffee")
 Storage = require("./storage.coffee")
 Author = require("./author.coffee")
 FileDialog = require("./file-dialog.coffee")
+showStatusMessage = require("./status-message.coffee")
 
 fileLoadedBus = new Bacon.Bus()
 initialApplication = if localStorage.application
@@ -42,6 +43,7 @@ editor = Editor(initialApplication.code, fileLoadedBus.map(".code"))
 author = Author(initialApplication.author, menubar.itemClickE("file-login"), menubar.itemClickE("file-logout"))
 
 fileDialog = FileDialog(author.authorP, menubar.itemClickE("file-open"))
+fileDialog.fileLoadedE.map((app) -> "Loaded \"" + app.name + "\"").onValue(showStatusMessage)
 fileLoadedBus.plug(fileDialog.fileLoadedE)
 fileLoadedBus.plug(menubar.itemClickE("file-new").map(examples.empty))
 
@@ -82,8 +84,8 @@ storage = Storage(
   menubar.itemClickE("file-save")
   renameE
 )
-storage.saveResultE.log() # TODO: replace with a feedback
-storage.renameResultE.log() # TODO: replace with a feedback
+storage.saveResultE.onValue(showStatusMessage)
+storage.renameResultE.onValue(showStatusMessage)
 
 promptNewName = (suggestion) ->
   newName = prompt("Enter new name", suggestion) || suggestion
