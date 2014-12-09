@@ -47,9 +47,10 @@ nameP = fileLoadedBus.map(".name")
 
 renameBus.plug(menubar.itemClickE("file-rename")
   .map nameP
-  .map (oldName) -> 
+  .map((oldName) ->
     newName = prompt("Enter new name", oldName) || oldName
-    { oldName, newName }
+    { oldName, newName })
+  .filter((({oldName, newName}) -> oldName != newName))
 )
 
 nameP.onValue (name) ->
