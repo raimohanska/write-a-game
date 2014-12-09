@@ -1,5 +1,11 @@
 $ = window.$ = require("jquery")
 Bacon = window.Bacon = require("baconjs")
+Bacon.Observable :: flatScan = (seed, f) ->
+  acc = seed
+  @flatMapLatest((newValue) ->
+    acc = f(acc, newValue)
+  )
+  .toProperty(seed)
 _ = require("lodash")
 $.fn.asEventStream = Bacon.$.asEventStream
 examples = require("./examples.coffee")
@@ -14,8 +20,6 @@ Author = require("./author.coffee")
 FileDialog = require("./file-dialog.coffee")
 
 fileLoadedBus = new Bacon.Bus()
-renameBus = new Bacon.Bus()
-
 initialApplication = if localStorage.application
     JSON.parse(localStorage.application)
   else
@@ -41,17 +45,16 @@ fileDialog = FileDialog(author.authorP, menubar.itemClickE("file-open"))
 fileLoadedBus.plug(fileDialog.fileLoadedE)
 fileLoadedBus.plug(menubar.itemClickE("file-new").map(examples.empty))
 
-nameP = fileLoadedBus.map(".name")
-  .merge(renameBus.map(".newName"))
-  .scan(initialApplication.name, (oldName, newName) -> newName)
 
-renameBus.plug(menubar.itemClickE("file-rename")
-  .map nameP
-  .map((oldName) ->
-    newName = prompt("Enter new name", oldName) || oldName
-    { oldName, newName })
-  .filter((({oldName, newName}) -> oldName != newName))
-)
+nameModE = fileLoadedBus.map((app) -> (-> {name: app.name}))
+  .merge(menubar.itemClickE("file-rename").map(-> ({name}, newName) ->
+     promptNewName(name).map((newName) -> {name: newName, rename: true, oldName: name})
+   ))
+
+nameChangesP = nameModE.flatScan(initialApplication, (oldName, f) -> f(oldName))
+nameP = nameChangesP.map(".name")
+
+renameE = nameChangesP.changes().filter(".rename").map(({name, oldName}) -> {newName: name, oldName})
 
 nameP.onValue (name) ->
   $("#menu-file > .title").text('Project "' + name + '"')
@@ -77,20 +80,23 @@ applicationP.onValue (application) ->
 storage = Storage(
   applicationP,
   menubar.itemClickE("file-save")
-  renameBus
+  renameE
 )
 storage.saveResultE.log() # TODO: replace with a feedback
 storage.renameResultE.log() # TODO: replace with a feedback
 
-promptNewName = (application) ->
-  newName = prompt("Enter new name", application.name + " fork")
-  application = _.clone(application)
-  application.name = newName
-  application
+promptNewName = (suggestion) ->
+  newName = prompt("Enter new name", suggestion) || suggestion
+  Bacon.once(newName)
 
 forkE = menubar.itemClickE("file-fork")
   .map(applicationP)
-  .flatMap (application) -> promptNewName(application)
+  .flatMap (application) -> 
+    promptNewName(application.name + " fork")
+      .map (newName) ->
+        application = _.clone(application)
+        application.name = newName
+        application
 
 fileLoadedBus.plug(forkE)
 
