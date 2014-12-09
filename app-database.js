@@ -22,7 +22,7 @@ function AppDatabaseWithConnection(conn, app) {
     sendResult(mongoFind({"author": req.params.author}, {name:true}), res)
   })
   app.get("/apps/:author/:name", function(req, res) {
-    sendResult(mongoFind({"author": req.params.author, "name": req.params.name}).map(".0"), res)
+    sendResult(mongoFind({"author": req.params.author, "name": req.params.name}, {}).map(".0"), res)
   })
   app.post("/apps", function(req, res) {
     sendResult(mongoPost(req.body), res)

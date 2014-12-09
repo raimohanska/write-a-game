@@ -11,7 +11,9 @@ runCode = require("./code-runner.coffee")
 menubar = require("./menu.coffee")
 Storage = require("./storage.coffee")
 Author = require("./author.coffee")
-FileOpener = require("./file-opener.coffee")
+FileDialog = require("./file-dialog.coffee")
+
+fileLoadedE = new Bacon.Bus()
 
 initialApplication = if localStorage.application
     JSON.parse(localStorage.application)
@@ -27,13 +29,16 @@ assetsP = Bacon.update initialApplication.assets,
     assets = _.clone(assets)
     delete assets[asset.name]
     assets
+  fileLoadedE.map(".assets"), (_, loadedAssets) ->
+    loadedAssets
 
-editor = Editor(initialApplication)
+editor = Editor(initialApplication.code, fileLoadedE.map(".code"))
 
 author = Author(initialApplication.author, menubar.itemClickE("file-login"), menubar.itemClickE("file-logout"))
 
-fileLoadedE = FileOpener(author.authorP, menubar.itemClickE("file-open")).fileLoadedE
-fileLoadedE.log()
+fileDialog = FileDialog(author.authorP, menubar.itemClickE("file-open"))
+fileLoadedE.plug(fileDialog.fileLoadedE)
+fileLoadedE.plug(menubar.itemClickE("file-new").map(examples.empty))
 
 applicationP = Bacon.combineTemplate
   author: author.authorP
@@ -58,13 +63,9 @@ storage = Storage(
   menubar.itemClickE("file-save")
   menubar.itemClickE("file-save-copy")
 )
+storage.saveResultE.log() # TODO: replace with a feedback
 
-
-author.authorP.log()
 author.loggedInP.onValue (loggedIn) ->
   $(".menu .loggedin").toggleClass("disabled", !loggedIn)
-
-
-storage.saveResultE.log()
 
 $("body").css("opacity", 1)

@@ -14,3 +14,7 @@ interval(100, function() {
   ella.move({x: 1, y: 0})
 })
   """
+  empty:
+    name: "New game"
+    assets: {}
+    code: ""
