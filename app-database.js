@@ -27,6 +27,14 @@ function AppDatabaseWithConnection(conn, app) {
   app.post("/apps", function(req, res) {
     sendResult(mongoPost(req.body), res)
   })
+  app.post("/apps/:author/:name/rename/:newName", function(req, res) {
+    mongoResult = Bacon.fromNodeCallback(apps,
+      "update",
+      {author: req.params.author, name: req.params.name},
+      {$set: { name: req.params.newName }}
+    )
+    sendResult(mongoResult, res)
+  })
   function mongoPost(content) {
     var data = {
       author: content.author,

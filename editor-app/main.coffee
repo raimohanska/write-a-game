@@ -13,7 +13,8 @@ Storage = require("./storage.coffee")
 Author = require("./author.coffee")
 FileDialog = require("./file-dialog.coffee")
 
-fileLoadedE = new Bacon.Bus()
+fileLoadedBus = new Bacon.Bus()
+renameBus = new Bacon.Bus()
 
 initialApplication = if localStorage.application
     JSON.parse(localStorage.application)
@@ -29,20 +30,27 @@ assetsP = Bacon.update initialApplication.assets,
     assets = _.clone(assets)
     delete assets[asset.name]
     assets
-  fileLoadedE.map(".assets"), (_, loadedAssets) ->
+  fileLoadedBus.map(".assets"), (_, loadedAssets) ->
     loadedAssets
 
-editor = Editor(initialApplication.code, fileLoadedE.map(".code"))
+editor = Editor(initialApplication.code, fileLoadedBus.map(".code"))
 
 author = Author(initialApplication.author, menubar.itemClickE("file-login"), menubar.itemClickE("file-logout"))
 
 fileDialog = FileDialog(author.authorP, menubar.itemClickE("file-open"))
-fileLoadedE.plug(fileDialog.fileLoadedE)
-fileLoadedE.plug(menubar.itemClickE("file-new").map(examples.empty))
+fileLoadedBus.plug(fileDialog.fileLoadedE)
+fileLoadedBus.plug(menubar.itemClickE("file-new").map(examples.empty))
 
-nameP = Bacon.update(initialApplication.name,
-  fileLoadedE.map(".name"), ((oldName, newName) -> newName),
-  menubar.itemClickE("file-rename"), ((oldName) -> prompt("Enter new name", oldName) || oldName))
+nameP = fileLoadedBus.map(".name")
+  .merge(renameBus.map(".newName"))
+  .scan(initialApplication.name, (oldName, newName) -> newName)
+
+renameBus.plug(menubar.itemClickE("file-rename")
+  .map nameP
+  .map (oldName) -> 
+    newName = prompt("Enter new name", oldName) || oldName
+    { oldName, newName }
+)
 
 nameP.onValue (name) ->
   $("#menu-file > .title").text('Project "' + name + '"')
@@ -69,8 +77,10 @@ storage = Storage(
   applicationP,
   menubar.itemClickE("file-save")
   menubar.itemClickE("file-save-copy")
+  renameBus
 )
 storage.saveResultE.log() # TODO: replace with a feedback
+storage.renameResultE.log() # TODO: replace with a feedback
 
 author.loggedInP.onValue (loggedIn) ->
   $(".menu .loggedin").toggleClass("disabled", !loggedIn)
