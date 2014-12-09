@@ -9,14 +9,10 @@ Editor = require("./editor.coffee")
 ErrorDisplay = require("./error-display.coffee")
 runCode = require("./code-runner.coffee")
 
-$run = $(".run")
-
 initialApplication = if localStorage.application
     JSON.parse(localStorage.application)
   else
     examples.first
-
-enabledP = Bacon.constant(true)
 
 assetsP = Bacon.update initialApplication.assets,
   assetUploader.newAssetE, (assets, newFile) ->
@@ -30,16 +26,13 @@ assetsP = Bacon.update initialApplication.assets,
 
 editor = Editor(initialApplication)
 
-codeP = editor.codeP
-
 applicationP = Bacon.combineTemplate
   name: "some app"
-  code: codeP
+  code: editor.codeP
   assets: assetsP
 
 evalE = applicationP
-  .filter(enabledP)
-  .sampledBy($run.asEventStream("click").doAction(".preventDefault").merge(editor.runE))
+  .sampledBy($(".run").asEventStream("click").doAction(".preventDefault").merge(editor.runE))
 
 evalResultE = evalE.flatMap runCode
 
