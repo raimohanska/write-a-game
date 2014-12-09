@@ -26,6 +26,11 @@ module.exports = (grunt) ->
           {expand: true, cwd: 'editor-app/', src: '**/*.html', dest: 'output/'}
         ]
       }
+      images: {
+        files: [
+          {expand: true, cwd: 'editor-app/img', src: '**', dest: 'output/img/'}
+        ]
+      }
       game: {
         files: [
           {expand: true, cwd: 'game-app/', src: '**/*.html', dest: 'output/game/'}

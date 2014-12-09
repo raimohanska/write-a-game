@@ -3,6 +3,8 @@ Bacon = window.Bacon = require("baconjs")
 _ = require("lodash")
 $.fn.asEventStream = Bacon.$.asEventStream
 examples = require("./examples.coffee")
+assetUploader = require("./asset-uploader.coffee")
+AssetListView = require("./asset-list-view.coffee")
 
 $code = $("#code #editor")
 $run = $(".run")
@@ -27,34 +29,15 @@ codeP = Bacon.fromEventTarget(codeMirror, "change")
   .toProperty(initialApplication.code)
 enabledP = Bacon.constant(true)
 
-fileSelector = document.querySelector("#fileupload")
-newFileE = Bacon.fromEventTarget(fileSelector, "change")
-  .map(-> fileSelector.files[0])
-  .flatMap((file) -> 
-    reader  = new FileReader()
-    reader.readAsDataURL(file)
-    Bacon.fromEventTarget(reader, "loadend")
-      .map -> 
-        type: file.type
-        name: file.name
-        data: reader.result
-  )
-
 assetsP = Bacon.update initialApplication.assets,
-  newFileE, (assets, newFile) -> 
+  assetUploader.newAssetE, (assets, newFile) ->
     assets = _.clone(assets)
     assets[newFile.name] = newFile
     assets
-
-assetsP.onValue (assets) ->
-  elems = _.keys(assets).map (name) ->
-    asset = assets[name]
-    preview = $("<img>").attr("src", asset.data)
-    return $("<li>")
-      .append($("<span>").addClass("name").text(asset.name))
-      .append(preview)
-  $("#assets ul").html(elems)
-
+  assetUploader.removeAssetE, (assets, asset) ->
+    assets = _.clone(assets)
+    delete assets[asset.name]
+    assets
 
 applicationP = Bacon.combineTemplate
   name: "some app"
@@ -81,6 +64,8 @@ evalCode = (application) ->
   $("#game").attr("src", "game/game.html")
 
 evalE.onValue(evalCode)
+
+AssetListView(assetsP)
 
 applicationP.onValue (application) ->
   localStorage.application = JSON.stringify(application)

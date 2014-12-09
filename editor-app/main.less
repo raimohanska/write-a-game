@@ -47,7 +47,9 @@ body {
 
 #assets {
   li {
+    list-style: none;
     height: 24px;
+    width: 250px;
     vertical-align: top;
     .name {
       display: inline-block;
@@ -55,6 +57,16 @@ body {
     }
     img {
       max-height: 24px;
+      max-width: 24px;
+    }
+    .remove {
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      background: url('img/remove-icon.png') 0 0 no-repeat;
+      background-size: 15px 15px;
+      margin-right: 6px;
+      cursor: pointer;
     }
   }
 }
