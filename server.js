@@ -5,6 +5,8 @@ var mongoUrl = process.env["MONGOHQ_URL"] || "mongodb://localhost/writegame"
 
 require("./app-database")(mongoUrl, app)
 
+app.use(express.compress())
+app.use(express.json())
 app.use('/', express.static(__dirname + '/output'))
 app.use('/', express.static(__dirname + '/app'))
 app.use('/images', express.static(__dirname + '/images'))

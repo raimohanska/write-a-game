@@ -8,6 +8,8 @@ AssetListView = require("./asset-list-view.coffee")
 Editor = require("./editor.coffee")
 ErrorDisplay = require("./error-display.coffee")
 runCode = require("./code-runner.coffee")
+menubar = require("./menu.coffee")
+Storage = require("./storage.coffee")
 
 initialApplication = if localStorage.application
     JSON.parse(localStorage.application)
@@ -42,5 +44,13 @@ AssetListView(assetsP)
 
 applicationP.onValue (application) ->
   localStorage.application = JSON.stringify(application)
+
+storage = Storage(
+  applicationP,
+  menubar.itemClickE.filter((id) -> id == "file-save")
+  menubar.itemClickE.filter((id) -> id == "file-save-copy")
+)
+
+storage.saveResultE.log()
 
 $("body").css("opacity", 1)

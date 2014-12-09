@@ -8,6 +8,39 @@ body {
   transition: opacity 1s;
 }
 
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+@menu-background: white;
+#menubar {
+  background: @menu-background;
+  border: 1px solid @gray;
+  width: 100%;
+  li.menu {
+    position: relative;
+    display: inline-block;
+    width: 5em;
+    .title { 
+      display: block; 
+      cursor: pointer;
+    }
+    >ul {
+      display: none;
+      background: @menu-background;
+      width: 5em;
+      position: absolute;   
+      border: 1px solid @gray;
+      box-shadow: 3px 2px 1px 0px #cfcfcf;
+      > li {
+        cursor: pointer;
+      }
+    }
+  }
+}
+
 #code {
   position: relative;
   .run {
@@ -47,7 +80,6 @@ body {
 
 #assets {
   li {
-    list-style: none;
     height: 24px;
     width: 250px;
     vertical-align: top;

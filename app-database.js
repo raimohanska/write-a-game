@@ -30,7 +30,7 @@ function AppDatabaseWithConnection(conn, app) {
   app.post("/apps", function(req, res) {
     var data = {
       id: randomstring.generate(10),
-      content: req.body,
+      content: JSON.stringify(req.body),
       date: new Date()
     }
     sendResult(mongoPost(data).map(data), res)
