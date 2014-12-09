@@ -39,7 +39,8 @@ function AppDatabaseWithConnection(conn, app) {
     var data = {
       author: content.author,
       name: content.name,
-      content: JSON.stringify(content),
+      code: JSON.stringify(content.code),
+      assets: JSON.stringify(content.assets),
       date: new Date()
     }
     return Bacon.fromNodeCallback(apps, 

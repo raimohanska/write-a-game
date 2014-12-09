@@ -22,7 +22,11 @@ module.exports = (authorP, fileOpenE) ->
     fileContentE = fileSelectE.flatMap (name) ->
       Bacon.fromPromise($.ajax("/apps/" + author + "/" + name))
 
-    fileContentE.map(".content").map(JSON.parse)
+    fileContentE.map (content) ->
+      author: content.author
+      name: content.name
+      code: JSON.parse(content.code)
+      assets: JSON.parse(content.assets)
 
   cancelE = $dialog.asEventStream("click").doAction(".stopPropagation")
   dismissE = cancelE.merge(fileLoadedE)
