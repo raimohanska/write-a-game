@@ -40,9 +40,16 @@ fileDialog = FileDialog(author.authorP, menubar.itemClickE("file-open"))
 fileLoadedE.plug(fileDialog.fileLoadedE)
 fileLoadedE.plug(menubar.itemClickE("file-new").map(examples.empty))
 
+nameP = Bacon.update(initialApplication.name,
+  fileLoadedE.map(".name"), ((oldName, newName) -> newName),
+  menubar.itemClickE("file-rename"), ((oldName) -> prompt("Enter new name", oldName) || oldName))
+
+nameP.onValue (name) ->
+  $("#menu-file > .title").text('Project "' + name + '"')
+
 applicationP = Bacon.combineTemplate
   author: author.authorP
-  name: "some app"
+  name: nameP
   code: editor.codeP
   assets: assetsP
 

@@ -22,7 +22,6 @@ ul {
   li.menu {
     position: relative;
     display: inline-block;
-    width: 5em;
     .title { 
       display: block; 
       cursor: pointer;
@@ -59,6 +58,7 @@ ul {
 #file-open-dialog {
   .smokescreen();
   display: none;
+  .title { display: none; }
   .dialog {
     ul { display: none; }
     li.file { cursor: pointer; }
@@ -68,7 +68,10 @@ ul {
   }
   &.loaded {
     .dialog ul { display: block; }
+    .title { display: block; }
   }
+  .no-files { display: none; }
+  &.empty .no-files { display: block; }
 }
 
 .dialog {
