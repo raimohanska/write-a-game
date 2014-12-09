@@ -1,7 +1,18 @@
 var Bacon = require("baconjs")
 var randomstring = require("randomstring")
+var MongoClient = require('mongodb').MongoClient
 
-function AppDatabase(conn, app) {
+function AppDatabase(mongoUrl, app) {
+  MongoClient.connect(mongoUrl, function(err, conn) {
+    if (err) {
+      console.log("ERROR: cannot connect to mongo at ", mongoUrl, err)
+    } else {
+      AppDatabaseWithConnection(conn, app)
+    }
+  })
+}
+
+function AppDatabaseWithConnection(conn, app) {
   var apps = conn.collection("apps")
 
   app.get("/apps", function(req, res) {
