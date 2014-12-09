@@ -8,7 +8,7 @@ Try it: http://write-a-game.herokuapp.com/
 
 ## Next up
 
-- Save/load code, write examples (can rip from turtle roy)
+- Share+fork
 - Write simple game
 - Walls / maze for pacman type games
 
