@@ -5,28 +5,18 @@ $.fn.asEventStream = Bacon.$.asEventStream
 examples = require("./examples.coffee")
 assetUploader = require("./asset-uploader.coffee")
 AssetListView = require("./asset-list-view.coffee")
+Editor = require("./editor.coffee")
+ErrorDisplay = require("./error-display.coffee")
 
-$code = $("#code #editor")
 $run = $(".run")
 
 runBus = new Bacon.Bus()
 
-codeMirror = CodeMirror.fromTextArea $code.get(0), {
-  lineNumbers: true
-  mode: "javascript"
-  theme: "solarized dark",
-  extraKeys: {
-    "Ctrl-Enter": -> runBus.push()
-  }
-}
 initialApplication = if localStorage.application 
     JSON.parse(localStorage.application) 
-  else 
+  else
     examples.first
-codeMirror.setValue(initialApplication.code)
-codeP = Bacon.fromEventTarget(codeMirror, "change")
-  .map(".getValue")
-  .toProperty(initialApplication.code)
+
 enabledP = Bacon.constant(true)
 
 assetsP = Bacon.update initialApplication.assets,
@@ -39,6 +29,10 @@ assetsP = Bacon.update initialApplication.assets,
     delete assets[asset.name]
     assets
 
+editor = Editor(initialApplication)
+
+codeP = editor.codeP
+
 applicationP = Bacon.combineTemplate
   name: "some app"
   code: codeP
@@ -48,27 +42,26 @@ evalE = applicationP
   .filter(enabledP)
   .sampledBy($run.asEventStream("click").doAction(".preventDefault").merge(runBus))
 
-$error = $("#code .error")
-parseStack = require("./parse-stack.coffee")
-errorDisplay = require("./error-display.coffee")(codeMirror, $error)
-
-evalCode = (application) -> 
+evalResultE = evalE.flatMap (application) ->
+  resultBus = new Bacon.Bus()
   window.frameLoaded = (frame) ->
     try
       assetsJs = "window.assets=" + JSON.stringify(application.assets) + ";"
       frame.eval(assetsJs)
       frame.eval(application.code)
-      errorDisplay.clearError()
+      resultBus.push "success"
     catch e
-      errorDisplay.showError(parseStack(e))
+      resultBus.error e
   $("#game").attr("src", "game/game.html")
+  resultBus
 
-evalE.onValue(evalCode)
+ErrorDisplay(editor.codeMirror, evalResultE)
+
+evalResultE.onValue ->
 
 AssetListView(assetsP)
 
 applicationP.onValue (application) ->
   localStorage.application = JSON.stringify(application)
 
-codeMirror.focus()
 $("body").css("opacity", 1)

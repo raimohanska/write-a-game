@@ -1,7 +1,11 @@
-module.exports = (codeMirror, errorElement) ->
+parseStack = require("./parse-stack.coffee")
+$ = require("jquery")
+
+module.exports = (codeMirror, evalResultE) ->
+  $error = $("#code .error")
   errorLine = undefined
 
-  showErrorText = (text) -> errorElement.text(text)
+  showErrorText = (text) -> $error.text(text)
 
   clearError = ->
     showErrorText ""
@@ -17,5 +21,5 @@ module.exports = (codeMirror, errorElement) ->
     else
       showErrorText "Error: " + error.message
 
-  { clearError, showError }
-
+  evalResultE.onValue clearError
+  evalResultE.errors().mapError(parseStack).onValue showError
