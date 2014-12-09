@@ -12,4 +12,7 @@ itemClickE = $menubar.find(".menu li").asEventStream("click")
 itemClickE.onValue (el) -> el.closest(".menu ul").hide()
 
 module.exports =
-  itemClickE: itemClickE.map (el) -> el.attr("id")
+  itemClickE: (menuId) -> 
+    itemClickE
+      .map (el) -> el.attr("id")
+      .filter((id) -> id == menuId)

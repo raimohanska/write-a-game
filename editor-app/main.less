@@ -36,6 +36,11 @@ ul {
       box-shadow: 3px 2px 1px 0px #cfcfcf;
       > li {
         cursor: pointer;
+        &.disabled {
+          cursor: default;
+          pointer-events: none;
+          opacity: 0.5;
+        }
       }
     }
   }

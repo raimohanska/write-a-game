@@ -10,6 +10,7 @@ ErrorDisplay = require("./error-display.coffee")
 runCode = require("./code-runner.coffee")
 menubar = require("./menu.coffee")
 Storage = require("./storage.coffee")
+Author = require("./author.coffee")
 
 initialApplication = if localStorage.application
     JSON.parse(localStorage.application)
@@ -28,7 +29,10 @@ assetsP = Bacon.update initialApplication.assets,
 
 editor = Editor(initialApplication)
 
+author = Author(initialApplication.author, menubar.itemClickE("file-login"))
+
 applicationP = Bacon.combineTemplate
+  author: author.authorP
   name: "some app"
   code: editor.codeP
   assets: assetsP
@@ -47,9 +51,15 @@ applicationP.onValue (application) ->
 
 storage = Storage(
   applicationP,
-  menubar.itemClickE.filter((id) -> id == "file-save")
-  menubar.itemClickE.filter((id) -> id == "file-save-copy")
+  menubar.itemClickE("file-save")
+  menubar.itemClickE("file-save-copy")
 )
+
+
+author.authorP.log()
+author.loggedInP.onValue (loggedIn) ->
+  $(".menu .loggedin").toggleClass("disabled", !loggedIn)
+
 
 storage.saveResultE.log()
 
