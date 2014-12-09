@@ -40,7 +40,12 @@ assetsP = Bacon.update initialApplication.assets,
 
 editor = Editor(initialApplication.code, fileLoadedBus.map(".code"))
 
-author = Author(initialApplication.author, menubar.itemClickE("file-login"), menubar.itemClickE("file-logout"))
+logoutE = menubar.itemClickE("file-logout")
+author = Author(initialApplication.author, menubar.itemClickE("file-login"), logoutE)
+
+logoutE.map("Logged out").onValue(showStatusMessage)
+author.authorP.changes().filter(author.loggedInP).map((author) -> "Logged in as \"" + author + "\"")
+  .onValue(showStatusMessage)
 
 fileDialog = FileDialog(author.authorP, menubar.itemClickE("file-open"))
 fileDialog.fileLoadedE.map((app) -> "Loaded \"" + app.name + "\"").onValue(showStatusMessage)

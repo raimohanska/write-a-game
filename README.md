@@ -11,6 +11,8 @@ Try it: http://write-a-game.herokuapp.com/
 - Share+fork
 - Write simple game
 - Walls / maze for pacman type games
+- Move assets to menu
+- Nicer menus
 
 ## Goal
 
