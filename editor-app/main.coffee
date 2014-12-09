@@ -11,6 +11,7 @@ runCode = require("./code-runner.coffee")
 menubar = require("./menu.coffee")
 Storage = require("./storage.coffee")
 Author = require("./author.coffee")
+FileOpener = require("./file-opener.coffee")
 
 initialApplication = if localStorage.application
     JSON.parse(localStorage.application)
@@ -29,7 +30,10 @@ assetsP = Bacon.update initialApplication.assets,
 
 editor = Editor(initialApplication)
 
-author = Author(initialApplication.author, menubar.itemClickE("file-login"))
+author = Author(initialApplication.author, menubar.itemClickE("file-login"), menubar.itemClickE("file-logout"))
+
+fileLoadedE = FileOpener(author.authorP, menubar.itemClickE("file-open")).fileLoadedE
+fileLoadedE.log()
 
 applicationP = Bacon.combineTemplate
   author: author.authorP

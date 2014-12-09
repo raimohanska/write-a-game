@@ -14,6 +14,8 @@
         <span class="title">File</span>
         <ul id="menu-file">
           <li id="file-login">Login</li>
+          <li class="loggedin" id="file-logout">Logout</li>
+          <li class="loggedin" id="file-open">Open</li>
           <li class="loggedin" id="file-save">Save</li>
           <li class="loggedin" id="file-save-copy">Save copy</li>
         </ul>
@@ -30,6 +32,13 @@
       <ul></ul>
       <div class="upload">Upload <input type="file" id="fileupload"></div>
     </div>
+  <div id="file-open-dialog">
+    <div class="dialog">
+      <div class="title">Open File...</div>
+      <ul class="files">
+      </ul>
+    </div>
+  </div>
   </body>
   <script src="codemirror/lib/codemirror.js"></script>
   <script src="codemirror/mode/javascript/javascript.js"></script>

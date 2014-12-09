@@ -16,13 +16,10 @@ function AppDatabaseWithConnection(conn, app) {
   var apps = conn.collection("apps")
 
   app.get("/apps", function(req, res) {
-    sendResult(mongoFind({}), res)
+    sendResult(mongoFind({}, {author:true, name: true}), res)
   })
   app.get("/apps/:author", function(req, res) {
-    sendResult(mongoFind({"content.author": req.params.author}), res)
-  })
-  app.get("/apps/:id", function(req, res) {
-    sendResult(mongoFind({"id": req.params.id}).map(".0"), res)
+    sendResult(mongoFind({"author": req.params.author}, {name:true}), res)
   })
   app.get("/apps/:author/:name", function(req, res) {
     sendResult(mongoFind({"author": req.params.author, "name": req.params.name}).map(".0"), res)
@@ -44,8 +41,8 @@ function AppDatabaseWithConnection(conn, app) {
       {upsert: true})
     .map(data)
   }
-  function mongoFind(query) {
-    return Bacon.fromNodeCallback(apps.find(query).sort({date: -1}), "toArray")
+  function mongoFind(query, projection) {
+    return Bacon.fromNodeCallback(apps.find(query, projection).sort({date: -1}), "toArray")
   }
   function sendResult(resultE, res) {
     resultE.onError(function(err) { 

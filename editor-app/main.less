@@ -46,6 +46,37 @@ ul {
   }
 }
 
+.smokescreen {
+  z-index: 9;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(0,0,0,0.3);
+}
+
+#file-open-dialog {
+  .smokescreen();
+  display: none;
+  &.active {
+    display: block;
+  }
+}
+
+.dialog {
+  z-index: 10;
+  background: white;
+  width: 30em;
+  height: 20em;
+  margin: auto;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
 #code {
   position: relative;
   .run {

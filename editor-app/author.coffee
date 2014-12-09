@@ -1,9 +1,9 @@
 Bacon = require("baconjs")
 
-module.exports = (initialAuthor, loginE) ->
+module.exports = (initialAuthor, loginE, logoutE) ->
   console.log initialAuthor
-  authorP = loginE
-    .map -> prompt("What's your name?")
-    .toProperty(initialAuthor)
+  authorP = Bacon.update(initialAuthor,
+    loginE, -> prompt("What's your name?")
+    logoutE, -> undefined)
   { authorP, loggedInP: authorP.map((a) -> !!a) }
     
