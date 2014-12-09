@@ -2,6 +2,7 @@ Bacon = require("baconjs")
 $ = require("jquery")
 
 Editor = (initialApplication) ->
+  runBus = new Bacon.Bus()
   $code = $("#code #editor")
   codeMirror = CodeMirror.fromTextArea $code.get(0), {
     lineNumbers: true
@@ -18,6 +19,6 @@ Editor = (initialApplication) ->
 
   codeMirror.focus()
 
-  { codeP, codeMirror }
+  { codeP, runE: runBus, codeMirror }
 
 module.exports = Editor

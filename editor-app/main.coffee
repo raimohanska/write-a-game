@@ -7,13 +7,12 @@ assetUploader = require("./asset-uploader.coffee")
 AssetListView = require("./asset-list-view.coffee")
 Editor = require("./editor.coffee")
 ErrorDisplay = require("./error-display.coffee")
+runCode = require("./code-runner.coffee")
 
 $run = $(".run")
 
-runBus = new Bacon.Bus()
-
-initialApplication = if localStorage.application 
-    JSON.parse(localStorage.application) 
+initialApplication = if localStorage.application
+    JSON.parse(localStorage.application)
   else
     examples.first
 
@@ -40,24 +39,11 @@ applicationP = Bacon.combineTemplate
 
 evalE = applicationP
   .filter(enabledP)
-  .sampledBy($run.asEventStream("click").doAction(".preventDefault").merge(runBus))
+  .sampledBy($run.asEventStream("click").doAction(".preventDefault").merge(editor.runE))
 
-evalResultE = evalE.flatMap (application) ->
-  resultBus = new Bacon.Bus()
-  window.frameLoaded = (frame) ->
-    try
-      assetsJs = "window.assets=" + JSON.stringify(application.assets) + ";"
-      frame.eval(assetsJs)
-      frame.eval(application.code)
-      resultBus.push "success"
-    catch e
-      resultBus.error e
-  $("#game").attr("src", "game/game.html")
-  resultBus
+evalResultE = evalE.flatMap runCode
 
 ErrorDisplay(editor.codeMirror, evalResultE)
-
-evalResultE.onValue ->
 
 AssetListView(assetsP)
 
