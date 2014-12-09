@@ -2,15 +2,14 @@ counter = 1
 
 class Figure
   constructor: (desc) ->
-    if (desc.match(/^[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+$/))
+    if assets[desc]
       @elem = $("<img>")
         .addClass("figure")
         .attr("src", assets[desc].data)
     else
       @elem = $("<div>").addClass("figure")
-      text = desc || ("" + (counter++))
-      @elem.text(text)
-      @elem.css { background: "#cccccc", "border": "1px solid black", width: "30px", height: "30px" }
+        .text(desc || ("" + (counter++)))
+        .css { background: "#cccccc", "border": "1px solid black", width: "30px", height: "30px" }
     $("#game").append(@elem)
   setPos: (pos) ->
     @pos = _.clone(pos)
