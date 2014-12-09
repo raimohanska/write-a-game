@@ -3,7 +3,7 @@ Bacon = require("baconjs")
 
 module.exports = (authorP, fileOpenE) ->
   $dialog = $("#file-open-dialog")
-  fileLoadedE = fileOpenE.map(authorP).flatMap (author) ->
+  fileLoadedE = fileOpenE.map(authorP).flatMapLatest (author) ->
     $dialog.addClass("active")
     Bacon.fromPromise($.ajax("/apps/" + author))
       .onValue (files) ->

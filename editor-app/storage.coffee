@@ -16,6 +16,7 @@ module.exports = (applicationP, saveE, renameE) ->
         url: "/apps/" + author + "/" + oldName + "/rename/" + newName
         type: "post"
       })
+    .sampledBy(renameE)
     .flatMap (request) ->
       Bacon.fromPromise($.ajax(request))
     .map("Renamed succesfully")
