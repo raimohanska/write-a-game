@@ -25,24 +25,33 @@ function AppDatabaseWithConnection(conn, app) {
     sendResult(mongoFind({"id": req.params.id}).map(".0"), res)
   })
   app.get("/apps/:author/:name", function(req, res) {
-    sendResult(mongoFind({"content.author": req.params.author, "content.description": req.params.name}).map(".0"), res)
+    sendResult(mongoFind({"author": req.params.author, "name": req.params.name}).map(".0"), res)
   })
   app.post("/apps", function(req, res) {
+    sendResult(mongoPost(req.body), res)
+  })
+  function mongoPost(content) {
     var data = {
-      id: randomstring.generate(10),
-      content: JSON.stringify(req.body),
+      author: content.author,
+      name: content.name,
+      content: JSON.stringify(content),
       date: new Date()
     }
-    sendResult(mongoPost(data).map(data), res)
-  })
-  function mongoPost(data) {
-    return Bacon.fromNodeCallback(apps, "insert", [data])
+    return Bacon.fromNodeCallback(apps, 
+      "update", 
+      {"author": data.author, "name": data.name}, 
+      data, 
+      {upsert: true})
+    .map(data)
   }
   function mongoFind(query) {
     return Bacon.fromNodeCallback(apps.find(query).sort({date: -1}), "toArray")
   }
   function sendResult(resultE, res) {
-    resultE.onError(res, "send")
+    resultE.onError(function(err) { 
+      console.log("Mongo error", err)
+      res.send(err)
+    })
     resultE.onValue(function(value) {
       if (value) {
         res.json(value)
