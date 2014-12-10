@@ -11,5 +11,6 @@ app.use "/", express.static(__dirname + "/output")
 app.use "/", express.static(__dirname + "/app")
 app.use "/images", express.static(__dirname + "/images")
 app.use "/codemirror", express.static(__dirname + "/node_modules/codemirror")
+app.get /^\/projects\/.*/, (req, res) -> res.sendfile("output/index.html")
 app.listen port
 console.log "Listening on port " + port

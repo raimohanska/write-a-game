@@ -22,5 +22,5 @@ Should be able to write pacman!
 
     npm install
     grunt
-    ./server
+    ./server.coffee
     open http://localhost:3000

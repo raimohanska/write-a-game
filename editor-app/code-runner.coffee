@@ -10,6 +10,6 @@ module.exports = (application) ->
       resultBus.push "success"
     catch e
       resultBus.error e
-  $("#game").attr("src", "game/game.html")
+  $("#game").attr("src", "/game/game.html")
   resultBus
 
