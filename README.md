@@ -9,6 +9,7 @@ Try it: http://write-a-game.herokuapp.com/
 ## Next up
 
 - Write first example for contributors
+- Split/clean app.coffee
 - Write simple game
 - Walls / maze for pacman type games
 - Move assets to menu
