@@ -1,30 +1,35 @@
 Bacon = require("baconjs")
 _ = require("lodash")
 
-module.exports =
-  openE: (author, name) ->
+storage = module.exports =
+  storeLocally: (application) ->
+    localStorage.application = JSON.stringify(application)
+  newApplication: ->
+    delete localStorage.application
+    document.location.pathname = "/"
+  applicationUrl: (author, name) ->
+    document.location.origin + "/projects/" + author + "/" + name
+  open: (author, name) ->
+    document.location = module.exports.applicationUrl(author, name)
+  ajaxOpen: (author, name) ->
     Bacon.fromPromise($.ajax("/apps/" + author + "/" + name))
-  saveResultE : (authorP, applicationP, saveE) ->
-    saveE.map Bacon.combineTemplate({app: applicationP, author: authorP})
-    .map ({app, author}) ->
-      application = _.clone(app)
-      application.author = author
-      {
-        url: "/apps"
-        type: "post"
-        contentType: "application/json"
-        data: JSON.stringify(application)
-      }
-    .flatMap (request) ->
-      Bacon.fromPromise($.ajax(request))
-    .map("Saved succesfully")
+  save: (application, author, name) ->
+    application.name = name
+    application.author = author
+    request =
+      url: "/apps"
+      type: "post"
+      contentType: "application/json"
+      data: JSON.stringify(application)
+    Bacon.fromPromise($.ajax(request))
 
-  renameResultE : (applicationP, renameE) ->
-    renameE.combine(applicationP.map(".author"), ({oldName, newName}, author) -> {
-        url: "/apps/" + author + "/" + oldName + "/rename/" + newName
-        type: "post"
-      })
-    .sampledBy(renameE)
-    .flatMap (request) ->
-      Bacon.fromPromise($.ajax(request))
-    .map("Renamed succesfully")
+  fork: (application, author, name) ->
+    storage.save(application, author, name)
+      .onValue(-> storage.open author, name)
+
+  rename: (author, oldName, newName) ->
+    request =
+      url: "/apps/" + author + "/" + oldName + "/rename/" + newName
+      type: "post"
+    Bacon.fromPromise($.ajax(request))
+      .onValue -> storage.open author, newName

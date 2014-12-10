@@ -35,14 +35,35 @@ ul {
       box-shadow: 3px 2px 1px 0px #cfcfcf;
       > li {
         cursor: pointer;
-        &.disabled {
-          cursor: default;
-          pointer-events: none;
-          opacity: 0.5;
-        }
       }
     }
   }
+}
+
+.disabled-item {
+  cursor: default;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+body:not(.logged-in) .when-logged-in {
+  .disabled-item();
+}
+
+body.logged-in .when-logged-out {
+  .disabled-item();
+}
+
+body:not(.dirty) .when-dirty {
+  .disabled-item();
+}
+
+body:not(.saved) .when-saved {
+  .disabled-item();
+}
+
+body:not(.is-owner) .when-owner {
+  .disabled-item();
 }
 
 .smokescreen {

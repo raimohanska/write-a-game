@@ -13,14 +13,14 @@
       <li id="menu-file" class="menu">
         <span class="title">Project</span>
         <ul>
-          <li id="file-rename">Rename</li>
+          <li class="when-saved when-owner" id="file-rename">Rename</li>
           <li id="file-new">New</li>
-          <li id="file-login">Login</li>
-          <li class="loggedin" id="file-logout">Logout</li>
-          <li class="loggedin" id="file-open">Open</li>
-          <li class="loggedin" id="file-save">Save</li>
-          <li class="loggedin" id="file-fork">Fork</li>
-          <li class="loggedin" id="file-share">Share</li>
+          <li class="when-logged-out" id="file-login">Login</li>
+          <li class="when-logged-in" id="file-logout">Logout</li>
+          <li class="when-logged-in" id="file-open">Open</li>
+          <li class="when-logged-in when-dirty when-owner" id="file-save">Save</li>
+          <li class="when-logged-in when-saved" id="file-fork">Fork</li>
+          <li class="when-logged-in when-saved" id="file-share">Share</li>
         </ul>
       </li>
     </ul>

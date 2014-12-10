@@ -14,8 +14,7 @@ FileDialog = require("./file-dialog.coffee")
 ShareDialog = require("./share-dialog.coffee")
 showStatusMessage = require("./status-message.coffee")
 
-module.exports = (initialApplication) ->
-  fileLoadedBus = new Bacon.Bus()
+module.exports = (initialApplication, fromRemote) ->
   assetsP = Bacon.update initialApplication.assets,
     assetUploader.newAssetE, (assets, newFile) ->
       assets = _.clone(assets)
@@ -25,10 +24,8 @@ module.exports = (initialApplication) ->
       assets = _.clone(assets)
       delete assets[asset.name]
       assets
-    fileLoadedBus.map(".assets"), (_, loadedAssets) ->
-      loadedAssets
 
-  editor = Editor(initialApplication.code, fileLoadedBus.map(".code"))
+  editor = Editor(initialApplication.code)
 
   logoutE = menubar.itemClickE("file-logout")
   author = Author(menubar.itemClickE("file-login"), logoutE)
@@ -37,27 +34,20 @@ module.exports = (initialApplication) ->
   author.authorP.changes().filter(author.loggedInP).map((author) -> "Logged in as \"" + author + "\"")
     .onValue(showStatusMessage)
 
+  newE = menubar.itemClickE("file-new")
+  newE.onValue storage.newApplication
+
   fileDialog = FileDialog(author.authorP, menubar.itemClickE("file-open"))
-  fileDialog.fileLoadedE.map((app) -> "Loaded \"" + app.name + "\"").onValue(showStatusMessage)
-  fileLoadedBus.plug(fileDialog.fileLoadedE)
-  fileLoadedBus.plug(menubar.itemClickE("file-new").map(examples.empty))
 
-  nameModE = fileLoadedBus.map((app) -> (-> {name: app.name}))
-    .merge(menubar.itemClickE("file-rename").map(-> ({name}, newName) ->
-       promptNewName(name).map((newName) -> {name: newName, rename: true, oldName: name})
-     ))
+  renameE = menubar.itemClickE("file-rename")
+    .flatMap(-> promptNewName(initialApplication.name))
+    .map (newName) -> { newName, oldName: initialApplication.name }
 
-  nameChangesP = nameModE.flatScan(initialApplication, (oldName, f) -> f(oldName))
-  nameP = nameChangesP.map(".name")
-
-  renameE = nameChangesP.changes().filter(".rename").map(({name, oldName}) -> {newName: name, oldName})
-
-  nameP.onValue (name) ->
-    $("#menu-file > .title").text('Project "' + name + '"')
+  $("#menu-file > .title").text('Project "' + initialApplication.name + '"')
 
   applicationP = Bacon.combineTemplate
-    author: author.authorP
-    name: nameP
+    author: initialApplication.author
+    name: initialApplication.name
     code: editor.codeP
     assets: assetsP
 
@@ -72,14 +62,22 @@ module.exports = (initialApplication) ->
 
   ShareDialog(applicationP, menubar.itemClickE("file-share"))
 
-  applicationP.changes().onValue (application) ->
-    localStorage.application = JSON.stringify(application)
+  applicationP.changes().onValue storage.storeLocally
 
   saveE = menubar.itemClickE("file-save")
-  
-  storage.saveResultE(author.authorP, applicationP, saveE).onValue(showStatusMessage)
-  storage.renameResultE(applicationP, renameE).onValue(showStatusMessage)
+ 
+  saveResultE = saveE
+    .map(Bacon.combineTemplate({app: applicationP, author: author.authorP}))
+    .flatMap ({app, author}) ->
+      storage.save(app, author, app.name)
 
+  saveResultE
+    .map("Saved succesfully")
+    .onValue(showStatusMessage)
+
+  renameE.combine(author.authorP, ({oldName, newName}, author) -> [ author, oldName, newName])
+    .onValues(storage.rename)
+    
   promptNewName = (suggestion) ->
     newName = prompt("Enter new name", suggestion) || suggestion
     Bacon.once(newName)
@@ -88,18 +86,43 @@ module.exports = (initialApplication) ->
     .map(applicationP)
     .flatMap (application) ->
       promptNewName(application.name + " fork")
-        .map (newName) ->
-          application = _.clone(application)
-          application.name = newName
-          application
+    .flatMap (name) ->
+      Bacon.combineTemplate({ name, author: author.authorP, application: applicationP }).take(1)
 
-  fileLoadedBus.plug(forkE)
+  forkE.onValue ({application, author, name}) ->
+    storage.fork(application, author, name)
 
-  savedP = saveE.map(true).merge(applicationP.changes().map(false)).toProperty(false)
+  changedByUser = assetUploader.assetChangeE.merge(editor.codeEditE)
+  hasRemoteP = saveResultE.map(true)
+    .toProperty(fromRemote)
+
+  firstSaveE = hasRemoteP.changes().filter((x) -> x)
+  firstSaveE.map(applicationP)
+    .onValue ({author, name}) -> storage.open(author, name)
+
+  isOwnerP = applicationP.combine(author.authorP, (app, author) -> !app.author || app.author == author)
+
+  dirtyP = changedByUser.map(true)
+    .merge(saveResultE.map(false))
+    .toProperty(false)
+    .or(hasRemoteP.not())
 
   author.loggedInP.onValue (loggedIn) ->
-    $(".menu .loggedin").toggleClass("disabled", !loggedIn)
-  savedP.and(author.loggedInP).not().onValue (dirty) ->
-    $("#file-share").toggleClass("disabled", dirty)
+    $("body").toggleClass("logged-in", loggedIn)
+
+  dirtyP.onValue (dirty) ->
+    $("body").toggleClass("dirty", dirty)
+
+  hasRemoteP.onValue (remote) ->
+    $("body").toggleClass("remote", remote)
+  
+  hasRemoteP.onValue (remote) ->
+    $("body").toggleClass("remote", remote)
+
+  hasRemoteP.and(dirtyP.not()).onValue (saved) ->
+    $("body").toggleClass("saved", saved)
+  
+  isOwnerP.onValue (owner) ->
+    $("body").toggleClass("is-owner", owner)
 
   $("body").css("opacity", 1)

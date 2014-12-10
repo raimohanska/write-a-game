@@ -1,7 +1,7 @@
 Bacon = require("baconjs")
 $ = require("jquery")
 
-Editor = (initialCode, codeLoadedE) ->
+Editor = (initialCode) ->
   runBus = new Bacon.Bus()
   $code = $("#code #editor")
   codeMirror = CodeMirror.fromTextArea $code.get(0), {
@@ -13,13 +13,13 @@ Editor = (initialCode, codeLoadedE) ->
     }
   }
   codeMirror.setValue(initialCode)
-  codeLoadedE.onValue(codeMirror, "setValue")
+
   codeP = Bacon.fromEventTarget(codeMirror, "change")
     .map(".getValue")
     .toProperty(initialCode)
 
   codeMirror.focus()
 
-  { codeP, runE: runBus, codeMirror }
+  { codeP, codeEditE: codeP.changes(), runE: runBus, codeMirror }
 
 module.exports = Editor

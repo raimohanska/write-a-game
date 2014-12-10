@@ -1,3 +1,4 @@
+examples = require("./examples.coffee")
 $ = window.$ = require("jquery")
 Bacon = window.Bacon = require("baconjs")
 Bacon.Observable :: flatScan = (seed, f) ->
@@ -14,14 +15,13 @@ storage = require("./storage.coffee")
 
 router = KiRouter.router()
 router.add "/", -> 
-  initialApplication = if localStorage.application
-      JSON.parse(localStorage.application)
-    else
-      examples.first
-  App(initialApplication)
+  if localStorage.application
+    App(JSON.parse(localStorage.application), false)
+  else
+    App(examples.first, false)
 router.add "/projects/:author/:name", (params) ->
-  openE = storage.openE(params.author, params.name)
-  openE.onValue App
+  openE = storage.ajaxOpen(params.author, params.name)
+  openE.onValue (app) -> App(app, true)
   openE.onError -> showError 404, "Not found"
 
 showError = alert
