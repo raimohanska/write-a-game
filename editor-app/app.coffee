@@ -30,7 +30,7 @@ module.exports = (initialApplication) ->
   editor = Editor(initialApplication.code, fileLoadedBus.map(".code"))
 
   logoutE = menubar.itemClickE("file-logout")
-  author = Author(initialApplication.author, menubar.itemClickE("file-login"), logoutE)
+  author = Author(null, menubar.itemClickE("file-login"), logoutE)
 
   logoutE.map("Logged out").onValue(showStatusMessage)
   author.authorP.changes().filter(author.loggedInP).map((author) -> "Logged in as \"" + author + "\"")
