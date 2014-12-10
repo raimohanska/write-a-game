@@ -8,7 +8,7 @@ Try it: http://write-a-game.herokuapp.com/
 
 ## Next up
 
-- Share+fork
+- Write first example for contributors
 - Write simple game
 - Walls / maze for pacman type games
 - Move assets to menu
