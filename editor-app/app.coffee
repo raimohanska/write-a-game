@@ -89,7 +89,7 @@ module.exports = (initialApplication, fromRemote) ->
   forkE.onValue ({application, author, name}) ->
     storage.fork(application, author, name)
 
-  changedByUser = assetUploader.assetChangeE.merge(editor.codeEditE)
+  changedByUser = applicationP.changes()
   hasRemoteP = saveResultE.map(true)
     .toProperty(fromRemote)
 

@@ -20,6 +20,6 @@ Editor = (initialCode) ->
 
   codeMirror.focus()
 
-  { codeP, codeEditE: codeP.changes(), runE: runBus, codeMirror }
+  { codeP, runE: runBus, codeMirror }
 
 module.exports = Editor

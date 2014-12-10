@@ -18,6 +18,4 @@ removeAssetE = $("#assets").asEventStream("click", ".remove")
   .map(".target")
   .map((el) -> $(el).data("asset"))
 
-assetChangeE = newAssetE.merge(removeAssetE)
-
-module.exports = { newAssetE, removeAssetE, assetChangeE }
+module.exports = { newAssetE, removeAssetE }
