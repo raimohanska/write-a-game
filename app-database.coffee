@@ -32,6 +32,8 @@ AppDatabaseWithConnection = (conn, app) ->
 
     resultE.onValue (value) ->
       if value
+        value.code = JSON.parse(value.code) if value.code?
+        value.assets = JSON.parse(value.assets) if value.assets?
         res.json value
       else
         res.status(404).send "Not found"

@@ -1,5 +1,6 @@
 $ = require("jquery")
 Bacon = require("baconjs")
+storage = require("./storage.coffee")
 
 module.exports = (authorP, fileOpenE) ->
   $dialog = $("#file-open-dialog")
@@ -20,13 +21,9 @@ module.exports = (authorP, fileOpenE) ->
       .map((e)-> $(e.target).data("file"))
 
     fileContentE = fileSelectE.flatMap (name) ->
-      Bacon.fromPromise($.ajax("/apps/" + author + "/" + name))
+      storage.openE author, name
 
-    fileContentE.map (content) ->
-      author: content.author
-      name: content.name
-      code: JSON.parse(content.code)
-      assets: JSON.parse(content.assets)
+    fileContentE
 
   cancelE = $dialog.asEventStream("click").doAction(".stopPropagation")
   dismissE = cancelE.merge(fileLoadedE)
