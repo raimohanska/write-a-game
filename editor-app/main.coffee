@@ -1,12 +1,6 @@
 examples = require("./examples.coffee")
 $ = window.$ = require("jquery")
 Bacon = window.Bacon = require("baconjs")
-Bacon.Observable :: flatScan = (seed, f) ->
-  acc = seed
-  @flatMapLatest((newValue) ->
-    acc = f(acc, newValue)
-  )
-  .toProperty(seed)
 _ = require("lodash")
 $.fn.asEventStream = Bacon.$.asEventStream
 App = require("./app.coffee")
