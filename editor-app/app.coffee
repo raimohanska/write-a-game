@@ -30,7 +30,7 @@ module.exports = (initialApplication) ->
   editor = Editor(initialApplication.code, fileLoadedBus.map(".code"))
 
   logoutE = menubar.itemClickE("file-logout")
-  author = Author(null, menubar.itemClickE("file-login"), logoutE)
+  author = Author(menubar.itemClickE("file-login"), logoutE)
 
   logoutE.map("Logged out").onValue(showStatusMessage)
   author.authorP.changes().filter(author.loggedInP).map((author) -> "Logged in as \"" + author + "\"")
@@ -75,7 +75,7 @@ module.exports = (initialApplication) ->
 
   saveE = menubar.itemClickE("file-save")
 
-  storage.saveResultE(applicationP, saveE).onValue(showStatusMessage)
+  storage.saveResultE(author.authorP, applicationP, saveE).onValue(showStatusMessage)
   storage.renameResultE(applicationP, renameE).onValue(showStatusMessage)
 
   promptNewName = (suggestion) ->
