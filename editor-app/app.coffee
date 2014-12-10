@@ -16,6 +16,11 @@ FileOperations = require("./file-operations.coffee")
 showStatusMessage = require("./status-message.coffee")
 
 module.exports = (initialApplication, fromRemote) ->
+  logoutE = menubar.itemClickE("file-logout")
+  author = Author(menubar.itemClickE("file-login"), logoutE)
+  
+  editor = Editor(initialApplication.code)
+
   assetsP = Bacon.update initialApplication.assets,
     assetUploader.newAssetE, (assets, newFile) ->
       assets = _.clone(assets)
@@ -26,56 +31,33 @@ module.exports = (initialApplication, fromRemote) ->
       delete assets[asset.name]
       assets
 
-  editor = Editor(initialApplication.code)
-
-  # Login / logout
-  logoutE = menubar.itemClickE("file-logout")
-  logoutE.map("Logged out").onValue(showStatusMessage)
-  author = Author(menubar.itemClickE("file-login"), logoutE)
-  author.authorP.changes().filter(author.loggedInP).map((author) -> "Logged in as \"" + author + "\"")
-    .onValue(showStatusMessage)
-
-  # Application property
   applicationP = Bacon.combineTemplate
     code: editor.codeP
     assets: assetsP
 
-  # Running
   evalE = applicationP
     .sampledBy($(".run").asEventStream("click").doAction(".preventDefault").merge(editor.runE))
   evalResultE = evalE.flatMap runCode
 
-  ErrorDisplay(editor.codeMirror, evalResultE)
-
-  AssetListView(assetsP)
-
-  ShareDialog(menubar.itemClickE("file-share"))
-
-  # Saving
-  applicationP.changes().onValue storage.storeLocally
-  saveE = menubar.itemClickE("file-save")
-  saveResultE = saveE
-    .map(Bacon.combineTemplate({app: applicationP, author: author.authorP}))
-    .flatMap ({app, author}) ->
-      storage.save(app, author, initialApplication.name)
-  saveResultE
-    .map("Saved succesfully")
-    .onValue(showStatusMessage)
-  
-  if not fromRemote
-    firstSaveE = saveResultE.take(1)
-    firstSaveE.map(author.authorP)
-      .onValue (author) -> storage.open(author, initialApplication.name)
-
-  StatusView(initialApplication, fromRemote, applicationP.changes(), saveResultE, author)
-  
   newE = menubar.itemClickE("file-new")
   openE = menubar.itemClickE("file-open")
   forkE = menubar.itemClickE("file-fork")
   renameE = menubar.itemClickE("file-rename")
+  saveE = menubar.itemClickE("file-save")
 
-  FileOperations(author, initialApplication, newE, openE, forkE, renameE)
-
+  fileOps = FileOperations(author, initialApplication, fromRemote, applicationP, newE, openE, forkE, renameE, saveE)
+  
+  fileOps.saveResultE.map("Saved succesfully").onValue(showStatusMessage)
+  logoutE.map("Logged out").onValue(showStatusMessage)
+  author.authorP.changes().filter(author.loggedInP)
+    .map((author) -> "Logged in as \"" + author + "\"")
+    .onValue(showStatusMessage)
+  
+  ErrorDisplay(editor.codeMirror, evalResultE)
+  AssetListView(assetsP)
+  ShareDialog(menubar.itemClickE("file-share"))
+  StatusView(initialApplication, fromRemote, applicationP.changes(), fileOps.saveResultE, author)
+  
   $("#menu-file > .title").text('Project "' + initialApplication.name + '"')
 
   $("body").css("opacity", 1)

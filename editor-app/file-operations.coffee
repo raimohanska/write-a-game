@@ -1,7 +1,7 @@
 storage = require("./storage.coffee")
 FileDialog = require("./file-dialog.coffee")
 
-module.exports = (author, initialApplication, newE, openE, forkE, renameE) ->
+module.exports = (author, initialApplication, fromRemote, applicationP, newE, openE, forkE, renameE, saveE) ->
   newE.onValue storage.newApplication
 
   FileDialog(author.authorP, openE)
@@ -23,4 +23,18 @@ module.exports = (author, initialApplication, newE, openE, forkE, renameE) ->
     .map (newName) -> { newName, oldName: initialApplication.name }
     .combine(author.authorP, ({oldName, newName}, author) -> [ author, oldName, newName])
     .onValues(storage.rename)
+
+  applicationP.changes().onValue storage.storeLocally
+
+  saveResultE = saveE
+    .map(Bacon.combineTemplate({app: applicationP, author: author.authorP}))
+    .flatMap ({app, author}) ->
+      storage.save(app, author, initialApplication.name)
+
+  if not fromRemote
+    firstSaveE = saveResultE.take(1)
+    firstSaveE.map(author.authorP)
+      .onValue (author) -> storage.open(author, initialApplication.name)
+
+  { saveResultE }
 
