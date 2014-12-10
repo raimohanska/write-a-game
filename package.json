@@ -16,6 +16,7 @@
     "jquery": "~2",
     "lodash": "2.4.1",
     "codemirror": "~4.7",
+    "ki-router.js": "mikko-apo/ki-router.js#1.1.13",
     "grunt": "~0.4.4",
     "grunt-cli": "~0.1.13",
     "grunt-contrib-jshint": "~0.6.3",
