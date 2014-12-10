@@ -9,7 +9,8 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "baconjs": "baconjs/bacon.js#ddcc65a0036c988206e25073c2d81fa54a4d1491",
+    "coffee-script": "^1.7",
+    "baconjs": "0.7.38",
     "browserify": "~3",
     "coffeeify": "~0.6",
     "jquery": "~2",
