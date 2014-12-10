@@ -11,6 +11,7 @@ menubar = require("./menu.coffee")
 storage = require("./storage.coffee")
 Author = require("./author.coffee")
 FileDialog = require("./file-dialog.coffee")
+ShareDialog = require("./share-dialog.coffee")
 showStatusMessage = require("./status-message.coffee")
 
 module.exports = (initialApplication) ->
@@ -41,7 +42,6 @@ module.exports = (initialApplication) ->
   fileLoadedBus.plug(fileDialog.fileLoadedE)
   fileLoadedBus.plug(menubar.itemClickE("file-new").map(examples.empty))
 
-
   nameModE = fileLoadedBus.map((app) -> (-> {name: app.name}))
     .merge(menubar.itemClickE("file-rename").map(-> ({name}, newName) ->
        promptNewName(name).map((newName) -> {name: newName, rename: true, oldName: name})
@@ -70,11 +70,13 @@ module.exports = (initialApplication) ->
 
   AssetListView(assetsP)
 
-  applicationP.onValue (application) ->
+  ShareDialog(applicationP, menubar.itemClickE("file-share"))
+
+  applicationP.changes().onValue (application) ->
     localStorage.application = JSON.stringify(application)
 
   saveE = menubar.itemClickE("file-save")
-
+  
   storage.saveResultE(author.authorP, applicationP, saveE).onValue(showStatusMessage)
   storage.renameResultE(applicationP, renameE).onValue(showStatusMessage)
 
@@ -93,7 +95,11 @@ module.exports = (initialApplication) ->
 
   fileLoadedBus.plug(forkE)
 
+  savedP = saveE.map(true).merge(applicationP.changes().map(false)).toProperty(false)
+
   author.loggedInP.onValue (loggedIn) ->
     $(".menu .loggedin").toggleClass("disabled", !loggedIn)
+  savedP.and(author.loggedInP).not().onValue (dirty) ->
+    $("#file-share").toggleClass("disabled", dirty)
 
   $("body").css("opacity", 1)

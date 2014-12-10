@@ -53,18 +53,22 @@ ul {
   height: 100%;
   width: 100%;
   background: rgba(0,0,0,0.3);
+  display: none;
+  &.active {
+    display: block;
+  }
+}
+
+#file-share-dialog {
+  .smokescreen();
 }
 
 #file-open-dialog {
   .smokescreen();
-  display: none;
   .title { display: none; }
   .dialog {
     ul { display: none; }
     li.file { cursor: pointer; }
-  }
-  &.active {
-    display: block;
   }
   &.loaded {
     .dialog ul { display: block; }

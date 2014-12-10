@@ -20,7 +20,6 @@ router.add "/", ->
       examples.first
   App(initialApplication)
 router.add "/projects/:author/:name", (params) ->
-  console.log(params)
   openE = storage.openE(params.author, params.name)
   openE.onValue App
   openE.onError -> showError 404, "Not found"
