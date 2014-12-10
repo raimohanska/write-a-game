@@ -98,7 +98,7 @@ module.exports = (initialApplication, fromRemote) ->
     .onValue (author) -> storage.open(author, initialApplication.name)
 
   isOwnerP = author.authorP.map (author) ->
-    !initialApplication.author || initialApplication.author isnt author
+    !initialApplication.author || initialApplication.author is author
 
   dirtyP = changedByUser.map(true)
     .merge(saveResultE.map(false))
