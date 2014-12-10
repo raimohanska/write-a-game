@@ -14,6 +14,7 @@ storage = module.exports =
   ajaxOpen: (author, name) ->
     Bacon.fromPromise($.ajax("/apps/" + author + "/" + name))
   save: (application, author, name) ->
+    application = _.clone(application)
     application.name = name
     application.author = author
     request =

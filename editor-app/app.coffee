@@ -46,8 +46,6 @@ module.exports = (initialApplication, fromRemote) ->
   $("#menu-file > .title").text('Project "' + initialApplication.name + '"')
 
   applicationP = Bacon.combineTemplate
-    author: initialApplication.author
-    name: initialApplication.name
     code: editor.codeP
     assets: assetsP
 
@@ -60,7 +58,7 @@ module.exports = (initialApplication, fromRemote) ->
 
   AssetListView(assetsP)
 
-  ShareDialog(applicationP, menubar.itemClickE("file-share"))
+  ShareDialog(menubar.itemClickE("file-share"))
 
   applicationP.changes().onValue storage.storeLocally
 
@@ -69,7 +67,7 @@ module.exports = (initialApplication, fromRemote) ->
   saveResultE = saveE
     .map(Bacon.combineTemplate({app: applicationP, author: author.authorP}))
     .flatMap ({app, author}) ->
-      storage.save(app, author, app.name)
+      storage.save(app, author, initialApplication.name)
 
   saveResultE
     .map("Saved succesfully")
@@ -83,9 +81,8 @@ module.exports = (initialApplication, fromRemote) ->
     Bacon.once(newName)
 
   forkE = menubar.itemClickE("file-fork")
-    .map(applicationP)
-    .flatMap (application) ->
-      promptNewName(application.name + " fork")
+    .flatMap ->
+      promptNewName(initialApplication.name + " fork")
     .flatMap (name) ->
       Bacon.combineTemplate({ name, author: author.authorP, application: applicationP }).take(1)
 
@@ -97,10 +94,11 @@ module.exports = (initialApplication, fromRemote) ->
     .toProperty(fromRemote)
 
   firstSaveE = hasRemoteP.changes().filter((x) -> x)
-  firstSaveE.map(applicationP)
-    .onValue ({author, name}) -> storage.open(author, name)
+  firstSaveE.map(author.authorP)
+    .onValue (author) -> storage.open(author, initialApplication.name)
 
-  isOwnerP = applicationP.combine(author.authorP, (app, author) -> !app.author || app.author == author)
+  isOwnerP = author.authorP.map (author) ->
+    !initialApplication.author || initialApplication.author isnt author
 
   dirtyP = changedByUser.map(true)
     .merge(saveResultE.map(false))

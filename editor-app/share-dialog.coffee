@@ -2,11 +2,10 @@ $ = require("jquery")
 Bacon = require("baconjs")
 storage = require("./storage.coffee")
 
-module.exports = (applicationP, shareE) ->
+module.exports = (shareE) ->
   $dialog = $("#file-share-dialog")
-  applicationP.onValue ({author, name}) ->
-    url = storage.applicationUrl(author, name)
-    $dialog.find("#share-link").text(url).attr("href", url)
+  url = document.location.toString()
+  $dialog.find("#share-link").text(url).attr("href", url)
   shareE.onValue ->
     $dialog.addClass "active"
 
