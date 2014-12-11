@@ -1,3 +1,4 @@
+Vector = require("./vector.coffee")
 counter = 1
 
 class Figure
@@ -7,18 +8,24 @@ class Figure
         .addClass("figure")
         .attr("src", assets[desc].data)
     else
-      @elem = $("<div>").addClass("figure")
+      @elem = $("<div>").addClass("figure text")
         .text(desc || ("" + (counter++)))
-        .css { background: "#cccccc", "border": "1px solid black", width: "30px", height: "30px" }
     $("#game").append(@elem)
-    @setPos({x: 0, y: 0})
-  setPos: (pos) ->
-    @pos = _.extend(_.clone(@pos || {x:0, y:0}), pos)
+    @setPos(Vector.zero)
+    @setRotation(0)
+  setPos: (x, y) ->
+    @pos = Vector(arguments...)
     @elem.css { left: @pos.x, top: @pos.y }
     this
   getPos: -> @pos
-  move: (@diff) ->
-    newPos = { x: @pos.x + @diff.x, y: @pos.y + @diff.y }
-    @setPos newPos
+  setRotation: (@rotation) ->
+    @elem.css { transform: "rotate("+@rotation+"deg)" }
+  rotate: (degrees) ->
+    @setRotation (@rotation+degrees)%360
+  moveForward: (pixels) ->
+    dir = Vector(1,0).rotateDeg(@rotation)
+    @move(dir)
+  move: (diff) ->
+    @setPos(@pos.add(diff))
 
 module.exports = Figure

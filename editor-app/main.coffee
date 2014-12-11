@@ -10,7 +10,9 @@ storage = require("./storage.coffee")
 router = KiRouter.router()
 router.add "/", -> 
   if localStorage.application
-    App(JSON.parse(localStorage.application), false)
+    application = JSON.parse(localStorage.application)
+    application.name =  application.name || examples.first.name
+    App(application, false)
   else
     App(examples.first, false)
 router.add "/projects/:author/:name", (params) ->
