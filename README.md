@@ -8,6 +8,7 @@ Try it: http://write-a-game.herokuapp.com/
 
 ## Next up
 
+- Keyboard control (isKeyDown)
 - Write first example for contributors
 - Autosave to localstorage (smart)
 - Write simple game
