@@ -10,6 +10,8 @@ help us improve.
 
 Try it: http://write-a-game.herokuapp.com/projects/raimohanska/example
 
+Please find the "Project" menu in the top left corner!
+
 My goal is to make it possible to create games like Pacman with ease.
 
 ## How-To
