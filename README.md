@@ -1,29 +1,17 @@
 ## write-a-game
 
-Write games with Javascript code in the browser.
+Write games with Javascript code in the browser. Login and save your project.
+Share it with others. Discover other's projects, fork them and improve.
 
-Under construction!
+Permanently under construction!
 
-Try it: http://write-a-game.herokuapp.com/
+Try it: http://write-a-game.herokuapp.com/projects/raimohanska/example
 
-## Next up
+My goal is to make it possible to create games like Pacman with ease.
 
-- Keyboard control (isKeyDown)
-- Write first example for contributors
-- Autosave to localstorage (smart)
-- Write simple game
-- Walls / maze for pacman type games
-- Move assets to menu
-- Nicer menus
-- Authentication
+## How-To
 
-## Goal
-
-Should be able to write pacman!
-
-## Game API
-
-### Figure
+Upload your own image using the Upload feature on the bottom of the page.
 
 Create a game figure and set its position
 
@@ -55,9 +43,34 @@ interval(10, function() {
 })
 ```
 
-## build & run
+## For developers
+
+Instructions for the developers of the programming environment.
+
+## Build & run
 
     npm install
     grunt
     ./server.coffee
     open http://localhost:3000
+
+## Backlog
+
+Things we're going to do next.
+
+- Keyboard control (isKeyDown)
+- Write first example for contributors
+- Autosave to localstorage (smart)
+- Write simple game
+- Walls / maze for pacman type games
+- Move assets to menu
+- Nicer menus
+- Authentication
+- Automatic tests
+
+## Contributing
+
+Please join us! 
+
+If you want to contribute, make a [Pull Request](https://github.com/raimohanska/write-a-game/pulls) on Github. 
+If you have an idea, suggestion or a problem, make an [Issue](https://github.com/raimohanska/write-a-game/issues).
