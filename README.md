@@ -58,7 +58,7 @@ Instructions for the developers of the programming environment.
 
 The main/editor application is in the `editor-app` directory, from where the application is built
 into the `output` directory using Grunt and [browserify](http://browserify.org/). So have a look at 
-[Gruntfile](Gruntfile), [editor-app/app.coffee](editor-app/app.coffee) and
+[Gruntfile](Gruntfile.coffee), [editor-app/app.coffee](editor-app/app.coffee) and
 [editor-app/index.html](editor-app/index.html) for starters.
 
 All content is served using an [Express](http://expressjs.com/) server that's bootstrapped
