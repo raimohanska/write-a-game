@@ -5,6 +5,9 @@ Share it with others. Discover other's projects, fork them and improve.
 
 Permanently under construction!
 
+Currently not ready for easy game development yet. Feel free to try it anyway and
+help us improve.
+
 Try it: http://write-a-game.herokuapp.com/projects/raimohanska/example
 
 My goal is to make it possible to create games like Pacman with ease.
