@@ -85,13 +85,13 @@ like [JQuery](http://jquery.com/), [lodash](https://lodash.com/) and [Bacon.js](
 
 Things we're going to do next.
 
+- Make menu more inviting, prettier and easier to use
 - Keyboard control (isKeyDown)
 - Write first example for contributors
 - Autosave to localstorage (smart)
 - Write simple game
 - Walls / maze for pacman type games
 - Move assets to menu
-- Nicer menus
 - Authentication
 - Automatic tests
 
