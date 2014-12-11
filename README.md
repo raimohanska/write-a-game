@@ -68,7 +68,7 @@ where user's applications/games are stored.
 
 The editor application uses the excellent [CodeMirror](http://codemirror.net/) editor for manipulating
 Javascript code, which it executes in an `<iframe>` that's reloaded each time the code is run.
-The contents to the iframe are served from [output/game](output/game) directory and generated from files in
+The contents to the iframe are served from `output/game` directory and generated from files in
 [game-app](game-app) directory. In addition to the static content, the user's uploaded assets (images) are encoded
 as Base64 data urls into a `<script>` element and the user's Javascript code is `eval`'ed in the iframe
 context.
