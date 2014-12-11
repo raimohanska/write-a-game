@@ -54,6 +54,27 @@ Instructions for the developers of the programming environment.
     ./server.coffee
     open http://localhost:3000
 
+## What's inside
+
+The main/editor application is in the `editor-app` directory, from where the application is built
+into the `output` directory using Grunt and [browserify](http://browserify.org/). So have a look at [Gruntfile], [editor-app/app.coffee] and
+[editor-app/index.html] for starters.
+
+All content is served using an [Express](http://expressjs.com/) server that's bootstrapped
+in [server.coffee] and launched on Heroku using [Procfile]. The server mainly just serves
+content from the [output] directory but also provides a thin layer on top of a MongoDB server,
+where user's applications/games are stored.
+
+The editor application uses the excellent [CodeMirror](http://codemirror.net/) editor for manipulating
+Javascript code, which it executes in an `<iframe>` that's reloaded each time the code is run.
+The contents to the iframe are served from [output/game] directory and generated from files in
+[game-app] directory. In addition to the static content, the user's uploaded assets (images) are encoded
+as Base64 data urls into a `<script>` element and the user's Javascript code is `eval`'ed in the iframe
+context.
+
+All code is written in Coffeescript. No frontend frameworks are used. Instead, we rely on libraries 
+like [JQuery](http://jquery.com/), [lodash](https://lodash.com/) and [Bacon.js](http://baconjs.github.io/).
+
 ## Backlog
 
 Things we're going to do next.
