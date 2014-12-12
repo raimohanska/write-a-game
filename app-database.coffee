@@ -4,9 +4,7 @@ AppDatabase = (mongoUrl, app) ->
       console.log "ERROR: cannot connect to mongo at ", mongoUrl, err
     else
       AppDatabaseWithConnection conn, app
-    return
 
-  return
 AppDatabaseWithConnection = (conn, app) ->
   mongoPost = (content) ->
     data =
@@ -28,7 +26,6 @@ AppDatabaseWithConnection = (conn, app) ->
     resultE.onError (err) ->
       console.log "Mongo error", err
       res.send err
-      return
 
     resultE.onValue (value) ->
       if value
@@ -37,16 +34,13 @@ AppDatabaseWithConnection = (conn, app) ->
         res.json value
       else
         res.status(404).send "Not found"
-      return
 
-    return
   apps = conn.collection("apps")
   app.get "/apps", (req, res) ->
     sendResult mongoFind({},
       author: true
       name: true
     ), res
-    return
 
   app.get "/apps/:author", (req, res) ->
     sendResult mongoFind(
@@ -54,18 +48,15 @@ AppDatabaseWithConnection = (conn, app) ->
     ,
       name: true
     ), res
-    return
 
   app.get "/apps/:author/:name", (req, res) ->
     sendResult mongoFind(
       author: req.params.author
       name: req.params.name
     , {}).map(".0"), res
-    return
 
   app.post "/apps", (req, res) ->
     sendResult mongoPost(req.body), res
-    return
 
   app.post "/apps/:author/:name/rename/:newName", (req, res) ->
     mongoResult = Bacon.fromNodeCallback(apps, "update",
@@ -76,9 +67,7 @@ AppDatabaseWithConnection = (conn, app) ->
         name: req.params.newName
     )
     sendResult mongoResult, res
-    return
 
-  return
 Bacon = require("baconjs")
 randomstring = require("randomstring")
 MongoClient = require("mongodb").MongoClient
