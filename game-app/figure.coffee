@@ -13,8 +13,13 @@ class Figure
     $("#game").append(@elem)
     @setPos(Vector.zero)
     @setRotation(0)
+  getSize: ->
+    Vector(@elem.width(), @elem.height())
+  setSize: ->
+    size = Vector(arguments)
+    @elem.css { width: size.x, height: size.y }
   setPos: ->
-    @pos = Vector(arguments...)
+    @pos = Vector(arguments)
     @elem.css { left: @pos.x, top: @pos.y }
     this
   getPos: -> @pos

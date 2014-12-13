@@ -1,6 +1,11 @@
 class Vector2D
   constructor: (x, y) ->
     return new Vector2D(x, y)  unless this instanceof Vector2D
+    if typeof x[0] == "object"
+      x = x[0]
+    else if typeof x[0] == "number"
+      y = x[1]
+      x = x[0]
     if typeof x == "object"
       y = x.y
       x = x.x
@@ -65,6 +70,6 @@ class Vector2D
   toString: ->
     "(" + x + ", " + y + ")"
 
-Vector2D.zero = Vector2D()
+Vector2D.zero = Vector2D(0, 0)
 
 module.exports = Vector2D

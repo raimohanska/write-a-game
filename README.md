@@ -71,6 +71,18 @@ interval(10, function() {
 })
 ```
 
+Set size of a figure:
+
+```js
+figure.setSize(100, 100)
+```
+
+Double the size of a figure:
+
+```js
+figure.setSize(figure.getSize().times(2))
+```
+
 ## For developers
 
 Instructions for the developers of the programming environment.
