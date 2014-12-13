@@ -51,10 +51,6 @@ interval(10, function() {
 Control a figure based on whether SPACE and A keys are down
 
 ```js
-var mila = new Figure("mila")
-
-mila.setPos({x: 120, y: 130})
-
 interval(100, function() {
   var spaceDown = Keyboard.isKeyDown(Keyboard.SPACE)
   var aDown = Keyboard.isKeyDown("a")
@@ -64,6 +60,16 @@ interval(100, function() {
 
 Instead of `Keyboard.SPACE` you can use `Keyboard.UP`, `Keyboard.DOWN`, `Keyboard.LEFT`, `Keyboard.RIGHT` 
 or any plain string, such as `"a"` or `"b"`, as shown in the example above.
+
+Or you can use the `direction()` and `direction2()` functions instead for controlling game figures using
+the arrow keys and the WDSA keys respectively.
+
+```js
+interval(10, function() {
+  mila.move(Keyboard.direction())
+  ella.move(Keyboard.direction2())
+})
+```
 
 ## For developers
 
@@ -103,10 +109,10 @@ like [JQuery](http://jquery.com/), [lodash](https://lodash.com/) and [Bacon.js](
 Things we're going to do next.
 
 - Make menu more inviting, prettier and easier to use
-- Write first example for contributors
 - Autosave to localstorage (smart)
 - Write simple game
 - Walls / maze for pacman type games
+- Sound effects as assets
 - Move assets to menu
 - Authentication
 - Automatic tests
