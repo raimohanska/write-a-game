@@ -122,6 +122,7 @@ Things we're going to do next.
 
 - Make menu more inviting, prettier and easier to use
 - Autosave to localstorage (smart)
+- Collision detection
 - Write simple game
 - Walls / maze for pacman type games
 - Sound effects as assets
