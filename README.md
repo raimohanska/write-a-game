@@ -102,7 +102,6 @@ like [JQuery](http://jquery.com/), [lodash](https://lodash.com/) and [Bacon.js](
 
 Things we're going to do next.
 
-- Grab keyboard focus when running
 - Make menu more inviting, prettier and easier to use
 - Write first example for contributors
 - Autosave to localstorage (smart)
