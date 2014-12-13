@@ -20,7 +20,7 @@ Upload your own image using the Upload feature on the bottom of the page.
 
 Create a game figure and set its position
 
-```javascript
+```js
 // Figure with an image
 var bird = new Figure("lintu1.png")
 
@@ -33,7 +33,7 @@ text.setPos(300, 200)
 
 Rotate a figure 1 degree each 10 milliseconds
 
-```
+```js
 interval(10, function() {
   text.rotate(1);
 })
@@ -41,12 +41,29 @@ interval(10, function() {
 
 Make a figure move in a circle
 
-```
+```js
 interval(10, function() {
   text.rotate(1);
   text.moveForward(1)
 })
 ```
+
+Control a figure based on whether SPACE and A keys are down
+
+```js
+var mila = new Figure("mila")
+
+mila.setPos({x: 120, y: 130})
+
+interval(100, function() {
+  var spaceDown = Keyboard.isKeyDown(Keyboard.SPACE)
+  var aDown = Keyboard.isKeyDown("a")
+  mila.move({x: spaceDown ? -2 : 2, y: aDown ? 1 : 0})
+})
+```
+
+Instead of `Keyboard.SPACE` you can use `Keyboard.UP`, `Keyboard.DOWN`, `Keyboard.LEFT`, `Keyboard.RIGHT` 
+or any plain string, such as `"a"` or `"b"`, as shown in the example above.
 
 ## For developers
 
@@ -86,7 +103,6 @@ like [JQuery](http://jquery.com/), [lodash](https://lodash.com/) and [Bacon.js](
 Things we're going to do next.
 
 - Make menu more inviting, prettier and easier to use
-- Keyboard control (isKeyDown)
 - Write first example for contributors
 - Autosave to localstorage (smart)
 - Write simple game
