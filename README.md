@@ -89,8 +89,8 @@ Instructions for the developers of the programming environment.
 
 ## Build & run
 
+    npm install -g coffee
     npm install
-    grunt
     ./server.coffee
     open http://localhost:3000
 
