@@ -89,7 +89,7 @@ Instructions for the developers of the programming environment.
 
 ## Build & run
 
-    npm install -g coffee
+    npm install -g coffee-script
     npm install
     ./server.coffee
     open http://localhost:3000
