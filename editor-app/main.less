@@ -22,15 +22,21 @@ ul {
   li.menu {
     position: relative;
     display: inline-block;
-    .title { 
-      display: block; 
+    .title {
+      display: block;
+      float:left;
+      padding: 5px;
+    }
+    .menu-icon {
+      float:left;
       cursor: pointer;
+      padding: 5px;
     }
     >ul {
       display: none;
       background: @menu-background;
       width: 5em;
-      position: absolute;   
+      position: absolute;
       border: 1px solid @gray;
       box-shadow: 3px 2px 1px 0px #cfcfcf;
       > li {
