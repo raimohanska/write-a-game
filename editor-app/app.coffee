@@ -44,7 +44,6 @@ module.exports = (initialApplication, fromRemote) ->
   ErrorDisplay(editor.codeMirror, evalResultE)
   ShareDialog(menubar.itemClickE("file-share"))
   StatusView(initialApplication, fromRemote, applicationP.changes(), fileOps.saveResultE, author)
-  
-  $("#menu-file > .title").text('Project "' + initialApplication.name + '"')
+  $("#menu-file > .title").text('Project: "' + initialApplication.name + '"')
 
   $("body").css("opacity", 1)
