@@ -1,13 +1,14 @@
-$ = window.$ = require("jquery")
-Bacon = window.Bacon = require("baconjs")
+$ = require("jquery")
+Bacon = require("baconjs")
 _ = require("lodash")
-Figure = require("./figure.coffee")
+$.fn.asEventStream = Bacon.$.asEventStream
+_.extend(window, { $, _, Bacon })
 
+Figure = require("./figure.coffee")
+Keyboard = require("./keyboard.coffee")
 interval = (i, fn) -> setInterval fn, i
 background = (bg) -> $("#game").css("background", bg)
 
-globals = { Figure, $, _, interval, background }
-
-_.extend(window, globals)
+_.extend(window, { Figure, Keyboard, interval, background })
 
 window.parent.frameLoaded(window)

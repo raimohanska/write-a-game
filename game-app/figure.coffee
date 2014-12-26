@@ -13,8 +13,13 @@ class Figure
     $("#game").append(@elem)
     @setPos(Vector.zero)
     @setRotation(0)
-  setPos: (x, y) ->
-    @pos = Vector(arguments...)
+  getSize: ->
+    Vector(@elem.width(), @elem.height())
+  setSize: ->
+    size = Vector(arguments)
+    @elem.css { width: size.x, height: size.y }
+  setPos: ->
+    @pos = Vector(arguments)
     @elem.css { left: @pos.x, top: @pos.y }
     this
   getPos: -> @pos
@@ -25,7 +30,8 @@ class Figure
   moveForward: (pixels) ->
     dir = Vector(1,0).rotateDeg(@rotation)
     @move(dir)
-  move: (diff) ->
+  move: ->
+    diff = Vector(arguments...)
     @setPos(@pos.add(diff))
 
 module.exports = Figure

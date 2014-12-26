@@ -1,4 +1,4 @@
-#!./node_modules/coffee-script/bin/coffee
+#!/usr/bin/env coffee
 
 express = require("express")
 port = process.env.PORT or 3000
