@@ -8,7 +8,7 @@ Permanently under construction!
 Currently not ready for easy game development yet. Feel free to try it anyway and
 help us improve.
 
-Try it: http://write-a-game.herokuapp.com/projects/raimohanska/example
+Try it: http://write-a-game.herokuapp.com
 
 Please find the "Project" menu in the top left corner!
 
